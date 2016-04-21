@@ -1,6 +1,4 @@
-package oper_log_obrazy_binarne;
-
-import com.sun.org.apache.xpath.internal.operations.Neg;
+package Algorithm.oper_log_obrazy_binarne;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -49,11 +47,15 @@ public class Negacja {
 
     private BufferedImage negation(BufferedImage img_param) throws IOException {
         // Write it to byte array in memory
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(1000);
         ImageIO.write(img_param, "jpg", byteArrayOutputStream);
+        byteArrayOutputStream.flush();
 
         // Do negation
         byte[] jpgByteArray = byteArrayOutputStream.toByteArray();
+
+        byteArrayOutputStream.close();
+
         byte[] negation = new byte[jpgByteArray.length];
 
         for (int i = 0; i < jpgByteArray.length; i++) {
@@ -61,7 +63,6 @@ public class Negacja {
         }
 
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(jpgByteArray));
-        BufferedImage image1 = ImageIO.read(new ByteArrayInputStream(negation));
 
         Graphics graphics = image.getGraphics();
         graphics.drawImage(img_param, 0, 0, null);

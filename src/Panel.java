@@ -1,4 +1,7 @@
-import oper_log_obrazy_binarne.Negacja;
+import Algorithm.bin_morf.BinClosing;
+import Algorithm.bin_morf.BinOpening;
+import Algorithm.gray_morf.GrayClosing;
+import Algorithm.gray_morf.GrayOpening;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -7,7 +10,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 /**
  * Created by MSI on 2016-03-30.
@@ -55,12 +57,14 @@ public class Panel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btn1 && !path.isEmpty()) {
-            Negacja negacja = new Negacja(path);
-            try {
-                negacja.rgb_to_binary();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+//            BinErosion okrawanie = new BinErosion(path);
+//            Test test = new Test(path);
+//            okrawanie.run();
+//            okrawanie.saveImage(okrawanie.getTemplateImage(), "_dylatacja");
+//            BinOpening opening = new BinOpening(path);
+//            BinClosing closing = new BinClosing(path);
+            GrayOpening grayOpening = new GrayOpening(path);
+            GrayClosing grayClosing = new GrayClosing(path);
             System.out.println("Zapisano plik!");
         }
         else if (e.getSource() == btn2) {
