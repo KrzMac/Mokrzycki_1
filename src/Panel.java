@@ -1,5 +1,6 @@
 import Algorithm.bin_morf.BinClosing;
 import Algorithm.bin_morf.BinOpening;
+import Algorithm.filters.FilterTest;
 import Algorithm.gray_morf.GrayClosing;
 import Algorithm.gray_morf.GrayOpening;
 
@@ -63,8 +64,10 @@ public class Panel extends JPanel implements ActionListener {
 //            okrawanie.saveImage(okrawanie.getTemplateImage(), "_dylatacja");
 //            BinOpening opening = new BinOpening(path);
 //            BinClosing closing = new BinClosing(path);
-            GrayOpening grayOpening = new GrayOpening(path);
-            GrayClosing grayClosing = new GrayClosing(path);
+//            GrayOpening grayOpening = new GrayOpening(path);
+//            GrayClosing grayClosing = new GrayClosing(path);
+
+            FilterTest filterTest = new FilterTest(path);
             System.out.println("Zapisano plik!");
         }
         else if (e.getSource() == btn2) {
