@@ -3,10 +3,7 @@ package Algorithm.bin_morf;
 import Algorithm.*;
 
 import javax.xml.crypto.Data;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferUShort;
-import java.awt.image.WritableRaster;
+import java.awt.image.*;
 
 /**
  * Created by MSI on 2016-04-18.
@@ -14,16 +11,36 @@ import java.awt.image.WritableRaster;
 public abstract class BinaryMorphology extends Algorithm {
 
     private BufferedImage templateImage;
+    private Raster templateRaster;
+    private Integer[][] array;
     private int size = 2;
 
     public BinaryMorphology(String path) {
         super(path);
+
+        this.array = new Integer[getBinaryImage().getHeight()][getBinaryImage().getWidth()];
+
+        this.templateRaster = binaryImage.getData();
+        for (int i = 0; i < getBinaryImage().getHeight(); i++) {
+            for (int j = 0; j < getBinaryImage().getWidth(); j++) {
+                array[i][j] = templateRaster.getSample(i, j, 0);
+            }
+        }
 
         this.templateImage = new BufferedImage(getBinaryImage().getWidth(), getBinaryImage().getHeight(), getBinaryImage().getType());
     }
 
     protected BinaryMorphology(BufferedImage templateImage, String path) {
         super(templateImage, path);
+
+        this.array = new Integer[getBinaryImage().getHeight()][getBinaryImage().getWidth()];
+
+        this.templateRaster = binaryImage.getData();
+        for (int i = 0; i < getBinaryImage().getHeight(); i++) {
+            for (int j = 0; j < getBinaryImage().getWidth(); j++) {
+                array[i][j] = templateRaster.getSample(i, j, 0);
+            }
+        }
 
         this.templateImage = new BufferedImage(getBinaryImage().getWidth(), getBinaryImage().getHeight(), getBinaryImage().getType());
     }
@@ -58,7 +75,7 @@ public abstract class BinaryMorphology extends Algorithm {
     }
 
     protected int getBinaryPixel(int x, int y) {
-        return binaryImage.getData().getSample(x, y, 0);
+        return this.array[x][y];
     }
 
     public BufferedImage getTemplateImage() {
