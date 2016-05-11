@@ -8,11 +8,13 @@ import java.awt.image.BufferedImage;
  */
 public abstract class Algorithm {
 
+    protected BufferedImage bufferedImage;
     protected BufferedImage binaryImage;
     protected BufferedImage grayImage;
     protected BufferedImage filterImage;
 
     public Algorithm(BufferedImage bufferedImage) {
+        this.bufferedImage = bufferedImage;
 
         this.binaryImage = setBinaryImage(bufferedImage);
         this.grayImage = setGrayImage(bufferedImage);

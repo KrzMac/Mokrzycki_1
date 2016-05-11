@@ -9,6 +9,7 @@ import Algorithm.gray_morf.GrayClosing;
 import Algorithm.gray_morf.GrayDilation;
 import Algorithm.gray_morf.GrayErosion;
 import Algorithm.gray_morf.GrayOpening;
+import Algorithm.oper_geometr.AspectRatioScale;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
@@ -65,8 +66,7 @@ public class Main extends Application {
         menuMorphology.getItems().addAll(addBinaryMorphology(), addGrayMorphology());
 
 
-
-        menuBar.getMenus().addAll(addFile(primaryStage), menuMorphology, addFilters());
+        menuBar.getMenus().addAll(addFile(primaryStage), menuMorphology, addFilters(), addGeomtr());
         root.getChildren().addAll(menuBar);
 
         hbImage.getChildren().add(sp);
@@ -81,6 +81,60 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    private Menu addGeomtr() {
+        Menu menuGeomtr = new Menu("Geometry");
+        MenuItem add;
+
+        add = new MenuItem("Aspect Ratio Scale");
+        add.setOnAction(event -> {
+            VBox layout = new VBox();
+
+            TextField txtWidth = new TextField();
+            TextField txtHeight = new TextField();
+            txtHeight.setEditable(false);
+
+            txtWidth.setText(Integer.toString(bufferedImage.getWidth()));
+            txtHeight.setText(Integer.toString(bufferedImage.getHeight()));
+
+            AspectRatioScale ars = new AspectRatioScale(bufferedImage);
+
+            // Width
+            Label labelWidth = new Label("Width");
+            layout.getChildren().add(labelWidth);
+            txtWidth.textProperty().addListener(((observable, oldValue, newValue) -> {
+                ars.calculate(Integer.parseInt(newValue), Integer.parseInt(txtHeight.getText()));
+
+                txtHeight.setText(Integer.toString(ars.getNewHeight()));
+                System.out.println(ars.getNewWidth() + "x" + ars.getNewHeight());
+            }));
+            layout.getChildren().add(txtWidth);
+
+            // Height
+            Label labelHeight = new Label("Height");
+            layout.getChildren().add(labelHeight);
+
+//            txtHeight.textProperty().addListener(((observable, oldValue, newValue) -> {
+//                ars.calculate(Integer.parseInt(txtWidth.getText()), Integer.parseInt(newValue));
+//
+//                txtWidth.setText(Integer.toString(ars.getNewWidth()));
+//                System.out.println(ars.getNewWidth() + "x" + ars.getNewHeight());
+//            }));
+            layout.getChildren().add(txtHeight);
+
+            Scene secondScene = new Scene(layout, 200, 100);
+
+            Stage secondStage = new Stage();
+            secondStage.setTitle("Set Scale");
+            secondStage.setScene(secondScene);
+
+            secondStage.show();
+        });
+        menuGeomtr.getItems().add(add);
+
+
+        return menuGeomtr;
+    }
+
     private Menu addFile(Window primaryStage) {
         Menu menuFile = new Menu("File");
         MenuItem add;
@@ -88,6 +142,15 @@ public class Main extends Application {
         add = new MenuItem("Open", new ImageView());
         add.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
+            //Set to user directory or go to default if cannot access
+            String userDirectoryString = System.getProperty("user.home");
+            File userDirectory = new File(userDirectoryString);
+            if(!userDirectory.canRead()) {
+                userDirectory = new File("c:/");
+            }
+            fileChooser.setInitialDirectory(userDirectory);
+
+
             file = fileChooser.showOpenDialog(primaryStage);
             if (file != null) {
                 Image image1 = new Image(file.toURI().toString());
@@ -206,7 +269,6 @@ public class Main extends Application {
 
     private Menu addFilters() {
         Menu menuEdit = new Menu("Filters");
-        MenuItem add;
 
         Menu menuLowPass = addFiltersLowPass();
         Menu menuHighPass = addFiltersHighPass();

@@ -1,0 +1,60 @@
+package Algorithm.oper_geometr;
+
+import Algorithm.Algorithm;
+
+import java.awt.image.BufferedImage;
+
+/**
+ * Created by MSI on 2016-05-11.
+ */
+public class AspectRatioScale extends Algorithm {
+
+    int inputWidth, inputHeight;
+    int newWidth, newHeight;
+
+    public AspectRatioScale(BufferedImage bufferedImage) {
+        super(bufferedImage);
+    }
+
+    public void calculate(int inputWidth, int inputHeight) {
+        this.inputWidth = inputWidth;
+        this.inputHeight = inputHeight;
+        run();
+    }
+
+    @Override
+    protected void run() {
+        int originalWidth, originalHeight;
+
+        originalWidth = bufferedImage.getWidth();
+        originalHeight = bufferedImage.getHeight();
+
+        newWidth = inputWidth;
+        newHeight = (newWidth * originalHeight) / originalWidth;
+
+//        double scaleX = (double) inputWidth / originalWidth;
+//        double scaleY = (double) inputHeight / originalHeight;
+//
+//        double scale = Math.min(scaleX, scaleY);
+//
+//        newWidth = (int) (inputWidth * scale);
+//        newHeight = (int) (inputHeight * scale);
+    }
+
+    public void setInputHeight(int inputHeight) {
+        this.inputHeight = inputHeight;
+    }
+
+    public void setInputWidth(int inputWidth) {
+        this.inputWidth = inputWidth;
+    }
+
+    public int getNewHeight() {
+        return newHeight;
+    }
+
+    public int getNewWidth() {
+        return newWidth;
+    }
+
+}
