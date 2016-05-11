@@ -6,14 +6,9 @@ import java.awt.image.BufferedImage;
  * Created by MSI on 2016-04-21.
  */
 public class GrayDilation extends GrayMorphology {
-    public GrayDilation(String path) {
-        super(path);
 
-        run();
-    }
-
-    public GrayDilation(BufferedImage templateImage, String path) {
-        super(templateImage, path);
+    public GrayDilation(BufferedImage bufferedImage) {
+        super(bufferedImage);
 
         run();
     }

@@ -11,14 +11,8 @@ public abstract class GrayMorphology extends Algorithm {
     private BufferedImage templateImage;
     private int size = 2;
 
-    public GrayMorphology(String path) {
-        super(path);
-
-        this.templateImage = new BufferedImage(getGrayImage().getWidth(), getGrayImage().getHeight(), getGrayImage().getType());
-    }
-
-    protected GrayMorphology(BufferedImage templateImage, String path) {
-        super(templateImage, path);
+    public GrayMorphology(BufferedImage bufferedImage) {
+        super(bufferedImage);
 
         this.templateImage = new BufferedImage(getGrayImage().getWidth(), getGrayImage().getHeight(), getGrayImage().getType());
     }

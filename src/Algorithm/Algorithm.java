@@ -6,25 +6,17 @@ import java.awt.image.BufferedImage;
 /**
  * Created by MSI on 2016-04-18.
  */
-public abstract class Algorithm extends Image {
+public abstract class Algorithm {
 
     protected BufferedImage binaryImage;
     protected BufferedImage grayImage;
     protected BufferedImage filterImage;
 
-    public Algorithm(String path) {
-        super(path);
+    public Algorithm(BufferedImage bufferedImage) {
 
-        this.binaryImage = setBinaryImage(getBufferedImage());
-        this.grayImage = setGrayImage(getBufferedImage());
-        this.filterImage = setFilterImage(getBufferedImage());
-    }
-
-    protected Algorithm(BufferedImage image, String path) {
-        super(path);
-
-        this.binaryImage = setBinaryImage(image);
-        this.grayImage = setGrayImage(image);
+        this.binaryImage = setBinaryImage(bufferedImage);
+        this.grayImage = setGrayImage(bufferedImage);
+        this.filterImage = setFilterImage(bufferedImage);
     }
 
     public BufferedImage setBinaryImage(BufferedImage bufferedImage) {

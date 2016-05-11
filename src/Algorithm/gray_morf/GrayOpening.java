@@ -1,13 +1,21 @@
 package Algorithm.gray_morf;
 
+import java.awt.image.BufferedImage;
+
 /**
  * Created by MSI on 2016-04-21.
  */
 public class GrayOpening {
-    public GrayOpening(String path) {
-        GrayErosion grayErosion = new GrayErosion(path);
-        grayErosion.saveImage(grayErosion.getTemplateImage(), "_gray_erosion");
-        GrayDilation grayDilation = new GrayDilation(grayErosion.getTemplateImage(), path);
-        grayDilation.saveImage(grayDilation.getTemplateImage(), "_gray_opening");
+    private BufferedImage templateImage;
+
+    public GrayOpening(BufferedImage bufferedImage) {
+        GrayErosion grayErosion = new GrayErosion(bufferedImage);
+        GrayDilation grayDilation = new GrayDilation(grayErosion.getTemplateImage());
+
+        this.templateImage = grayDilation.getTemplateImage();
+    }
+
+    public BufferedImage getTemplateImage() {
+        return templateImage;
     }
 }

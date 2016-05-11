@@ -6,14 +6,9 @@ import java.awt.image.BufferedImage;
  * Created by MSI on 2016-04-20.
  */
 public class BinDilation extends BinaryMorphology {
-    public BinDilation(String path) {
-        super(path);
 
-        run();
-    }
-
-    public BinDilation(BufferedImage templateImage, String path) {
-        super(templateImage, path);
+    public BinDilation(BufferedImage bufferedImage) {
+        super(bufferedImage);
 
         run();
     }

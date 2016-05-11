@@ -8,11 +8,10 @@ import java.awt.image.BufferedImage;
 public class BinClosing {
     private BufferedImage templateImage;
 
-    public BinClosing(String path) {
-        BinDilation binDilation = new BinDilation(path);
-//        binDilation.saveImage(binDilation.getTemplateImage(), "_dilation");
-        BinErosion binErosion = new BinErosion(binDilation.getTemplateImage(), path);
-//        binErosion.saveImage(binErosion.getTemplateImage(), "_closing");
+    public BinClosing(BufferedImage bufferedImage) {
+        BinDilation binDilation = new BinDilation(bufferedImage);
+        BinErosion binErosion = new BinErosion(binDilation.getTemplateImage());
+
         this.templateImage = binErosion.getTemplateImage();
     }
 

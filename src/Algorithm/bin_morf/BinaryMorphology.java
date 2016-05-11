@@ -12,36 +12,12 @@ public abstract class BinaryMorphology extends Algorithm {
 
     private BufferedImage templateImage;
     private Raster templateRaster;
-    private Integer[][] array;
     private int size = 2;
 
-    public BinaryMorphology(String path) {
-        super(path);
-
-        this.array = new Integer[getBinaryImage().getHeight()][getBinaryImage().getWidth()];
+    public BinaryMorphology(BufferedImage bufferedImage) {
+        super(bufferedImage);
 
         this.templateRaster = binaryImage.getData();
-        for (int i = 0; i < getBinaryImage().getHeight(); i++) {
-            for (int j = 0; j < getBinaryImage().getWidth(); j++) {
-                array[i][j] = templateRaster.getSample(i, j, 0);
-            }
-        }
-
-        this.templateImage = new BufferedImage(getBinaryImage().getWidth(), getBinaryImage().getHeight(), getBinaryImage().getType());
-    }
-
-    protected BinaryMorphology(BufferedImage templateImage, String path) {
-        super(templateImage, path);
-
-        this.array = new Integer[getBinaryImage().getHeight()][getBinaryImage().getWidth()];
-
-        this.templateRaster = binaryImage.getData();
-        for (int i = 0; i < getBinaryImage().getHeight(); i++) {
-            for (int j = 0; j < getBinaryImage().getWidth(); j++) {
-                array[i][j] = templateRaster.getSample(i, j, 0);
-            }
-        }
-
         this.templateImage = new BufferedImage(getBinaryImage().getWidth(), getBinaryImage().getHeight(), getBinaryImage().getType());
     }
 
@@ -75,7 +51,7 @@ public abstract class BinaryMorphology extends Algorithm {
     }
 
     protected int getBinaryPixel(int x, int y) {
-        return this.array[x][y];
+        return this.templateRaster.getSample(x, y, 0);
     }
 
     public BufferedImage getTemplateImage() {

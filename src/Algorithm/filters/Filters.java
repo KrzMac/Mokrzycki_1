@@ -17,8 +17,8 @@ public abstract class Filters extends Algorithm {
     protected FilterList filterList;
     protected Integer[][] arrayMask;
 
-    public Filters(String path) {
-        super(path);
+    public Filters(BufferedImage bufferedImage) {
+        super(bufferedImage);
 
         this.filterList = new FilterList();
         this.arrayMask = filterList.lowPass1();
@@ -133,5 +133,9 @@ public abstract class Filters extends Algorithm {
             }
         }
         return sum;
+    }
+
+    public void setArrayMask(Integer[][] arrayMask) {
+        this.arrayMask = arrayMask;
     }
 }

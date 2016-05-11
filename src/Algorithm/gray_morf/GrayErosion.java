@@ -6,14 +6,9 @@ import java.awt.image.BufferedImage;
  * Created by MSI on 2016-04-21.
  */
 public class GrayErosion extends GrayMorphology {
-    public GrayErosion(String path) {
-        super(path);
 
-        run();
-    }
-
-    public GrayErosion(BufferedImage templateImage, String path) {
-        super(templateImage, path);
+    public GrayErosion(BufferedImage bufferedImage) {
+        super(bufferedImage);
 
         run();
     }

@@ -6,14 +6,9 @@ import java.awt.image.BufferedImage;
  * Created by MSI on 2016-04-20.
  */
 public class BinErosion extends BinaryMorphology {
-    public BinErosion(String path) {
-        super(path);
 
-        run();
-    }
-
-    public BinErosion(BufferedImage templateImage, String path) {
-        super(templateImage, path);
+    public BinErosion(BufferedImage bufferedImage) {
+        super(bufferedImage);
 
         run();
     }
