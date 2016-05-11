@@ -31,14 +31,6 @@ public class AspectRatioScale extends Algorithm {
 
         newWidth = inputWidth;
         newHeight = (newWidth * originalHeight) / originalWidth;
-
-//        double scaleX = (double) inputWidth / originalWidth;
-//        double scaleY = (double) inputHeight / originalHeight;
-//
-//        double scale = Math.min(scaleX, scaleY);
-//
-//        newWidth = (int) (inputWidth * scale);
-//        newHeight = (int) (inputHeight * scale);
     }
 
     public void setInputHeight(int inputHeight) {

@@ -34,7 +34,12 @@ public abstract class BinaryMorphology extends Algorithm {
                     k = 0; l = 0;
                     for (int j = y - size; j < y + size; j++) {
                         if ((i >= 0&&j >= 0) && (i < binaryImage.getHeight()&&j < binaryImage.getWidth())) {
-                            sum = makeAlgorithm(i, j, k, l, sum, maskArray);
+                            try {
+                                sum = makeAlgorithm(i, j, k, l, sum, maskArray);
+                            } catch (Exception e) {
+
+                            }
+
 //                            sum = sum & getBinaryPixel(i, j) & maskArray[k][l];
                             l++;
                         }
@@ -44,7 +49,7 @@ public abstract class BinaryMorphology extends Algorithm {
 
                 if (sum == 1)
                     templateImage.setRGB(x, y, 0xffffffff);
-                else if (sum == 0)
+                else
                     templateImage.setRGB(x, y, 0xff000000);
             }
         }

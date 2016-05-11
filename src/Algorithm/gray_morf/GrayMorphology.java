@@ -26,12 +26,19 @@ public abstract class GrayMorphology extends Algorithm {
                 for (int i = x - size; i < x + size; i++) {
                     for (int j = y - size; j < y + size; j++) {
                         if ((i >= 0&&j >= 0) && (i < grayImage.getHeight()&&j < grayImage.getWidth())) {
-                            centralPixel = makeAlgorithm(centralPixel, i, j);
+                            try {
+                                centralPixel = makeAlgorithm(centralPixel, i, j);
+                            } catch (Exception e) {
+
+                            }
                         }
                     }
                 }
+                try {
+                    templateImage.setRGB(x, y, centralPixel);
+                } catch (Exception e) {
 
-                templateImage.setRGB(x, y, centralPixel);
+                }
             }
         }
     }

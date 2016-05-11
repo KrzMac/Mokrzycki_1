@@ -2,17 +2,19 @@ import Algorithm.bin_morf.BinClosing;
 import Algorithm.bin_morf.BinDilation;
 import Algorithm.bin_morf.BinErosion;
 import Algorithm.bin_morf.BinOpening;
-import Algorithm.filters.FilterList;
-import Algorithm.filters.FilterMedian;
-import Algorithm.filters.FilterPass;
+import Algorithm.filters.*;
 import Algorithm.gray_morf.GrayClosing;
 import Algorithm.gray_morf.GrayDilation;
 import Algorithm.gray_morf.GrayErosion;
 import Algorithm.gray_morf.GrayOpening;
 import Algorithm.oper_geometr.AspectRatioScale;
+import Algorithm.oper_geometr.ResizeImage;
+import Algorithm.oper_geometr.RotateImage;
+import Algorithm.oper_geometr.SymmetryImage;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -38,12 +40,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-//        EventQueue.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                new ActionFrame();
-//            }
-//        });
     }
 
     @Override
@@ -55,7 +51,7 @@ public class Main extends Application {
         sp.setFitToWidth(true);
         sp.setContent(iv1);
 
-        primaryStage.setTitle("Wprowadzenie Do Przetwarzania Obrazów");
+        primaryStage.setTitle("Wprowadzenie Przetwarzania Obrazów");
 
         VBox root = new VBox(5);
         HBox hbImage = new HBox();
@@ -79,60 +75,6 @@ public class Main extends Application {
 
 
         primaryStage.show();
-    }
-
-    private Menu addGeomtr() {
-        Menu menuGeomtr = new Menu("Geometry");
-        MenuItem add;
-
-        add = new MenuItem("Aspect Ratio Scale");
-        add.setOnAction(event -> {
-            VBox layout = new VBox();
-
-            TextField txtWidth = new TextField();
-            TextField txtHeight = new TextField();
-            txtHeight.setEditable(false);
-
-            txtWidth.setText(Integer.toString(bufferedImage.getWidth()));
-            txtHeight.setText(Integer.toString(bufferedImage.getHeight()));
-
-            AspectRatioScale ars = new AspectRatioScale(bufferedImage);
-
-            // Width
-            Label labelWidth = new Label("Width");
-            layout.getChildren().add(labelWidth);
-            txtWidth.textProperty().addListener(((observable, oldValue, newValue) -> {
-                ars.calculate(Integer.parseInt(newValue), Integer.parseInt(txtHeight.getText()));
-
-                txtHeight.setText(Integer.toString(ars.getNewHeight()));
-                System.out.println(ars.getNewWidth() + "x" + ars.getNewHeight());
-            }));
-            layout.getChildren().add(txtWidth);
-
-            // Height
-            Label labelHeight = new Label("Height");
-            layout.getChildren().add(labelHeight);
-
-//            txtHeight.textProperty().addListener(((observable, oldValue, newValue) -> {
-//                ars.calculate(Integer.parseInt(txtWidth.getText()), Integer.parseInt(newValue));
-//
-//                txtWidth.setText(Integer.toString(ars.getNewWidth()));
-//                System.out.println(ars.getNewWidth() + "x" + ars.getNewHeight());
-//            }));
-            layout.getChildren().add(txtHeight);
-
-            Scene secondScene = new Scene(layout, 200, 100);
-
-            Stage secondStage = new Stage();
-            secondStage.setTitle("Set Scale");
-            secondStage.setScene(secondScene);
-
-            secondStage.show();
-        });
-        menuGeomtr.getItems().add(add);
-
-
-        return menuGeomtr;
     }
 
     private Menu addFile(Window primaryStage) {
@@ -172,8 +114,12 @@ public class Main extends Application {
         add = new MenuItem("Save As...", new ImageView());
         add.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
-            fileChooser.getExtensionFilters().add(extFilter);
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("All Images", "*.*"),
+                    new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png"),
+                    new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg")
+            );
+            fileChooser.setInitialDirectory(file.getParentFile());
 
             File file = fileChooser.showSaveDialog(primaryStage);
             if (file != null) {
@@ -274,8 +220,9 @@ public class Main extends Application {
         Menu menuHighPass = addFiltersHighPass();
         Menu menuGradient = addFiltersGradient();
         MenuItem menuMedian = addFiltersMedian();
+        Menu menuExtreme = addFiltersExtreme();
 
-        menuEdit.getItems().addAll(menuLowPass, menuHighPass, menuGradient, menuMedian);
+        menuEdit.getItems().addAll(menuLowPass, menuHighPass, menuGradient, menuMedian, menuExtreme);
 
         return menuEdit;
     }
@@ -488,4 +435,193 @@ public class Main extends Application {
         return menuMedian;
     }
 
+    private Menu addFiltersExtreme() {
+        Menu menuExtr = new Menu("Extreme");
+        MenuItem add;
+
+        add = new MenuItem("Minimum");
+        add.setOnAction(event -> {
+            FilterMinimum filterMinimum = new FilterMinimum(bufferedImage);
+
+            bufferedImage = filterMinimum.getTemplateImage();
+            iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+        });
+        menuExtr.getItems().add(add);
+
+        add = new MenuItem("Maximum");
+        add.setOnAction(event -> {
+            FilterMaximum filterMaximum = new FilterMaximum(bufferedImage);
+
+            bufferedImage = filterMaximum.getTemplateImage();
+            iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+        });
+        menuExtr.getItems().add(add);
+
+        return menuExtr;
+    }
+
+    private Menu addGeomtr() {
+        Menu menuGeomtr = new Menu("Geometry");
+        MenuItem add;
+
+        add = new MenuItem("Aspect Ratio Scale");
+        add.setOnAction(event -> {
+            VBox layout = new VBox();
+            Scene secondScene = new Scene(layout, 150, 110);
+
+            TextField txtWidth = new TextField();
+            TextField txtHeight = new TextField();
+            txtHeight.setEditable(false);
+
+            txtWidth.setText(Integer.toString(bufferedImage.getWidth()));
+            txtHeight.setText(Integer.toString(bufferedImage.getHeight()));
+
+            AspectRatioScale ars = new AspectRatioScale(bufferedImage);
+
+            // Width
+            Label labelWidth = new Label("Width");
+            layout.getChildren().add(labelWidth);
+            txtWidth.textProperty().addListener(((observable, oldValue, newValue) -> {
+                ars.calculate(Integer.parseInt(newValue), Integer.parseInt(txtHeight.getText()));
+
+                txtHeight.setText(Integer.toString(ars.getNewHeight()));
+                System.out.println(ars.getNewWidth() + "x" + ars.getNewHeight());
+            }));
+            layout.getChildren().add(txtWidth);
+
+            // Height
+            Label labelHeight = new Label("Height");
+            layout.getChildren().add(labelHeight);
+            layout.getChildren().add(txtHeight);
+
+            Button btnResize = new Button();
+            btnResize.setText("Resize");
+
+            btnResize.setOnAction(event1 -> {
+                ResizeImage resizeImage = new ResizeImage(bufferedImage, Integer.parseInt(txtWidth.getText()), Integer.parseInt(txtHeight.getText()));
+                bufferedImage = resizeImage.resize();
+                this.iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                secondScene.getWindow().hide();
+            });
+            layout.getChildren().add(btnResize);
+
+            secondScene.setRoot(layout);
+
+            Stage secondStage = new Stage();
+            secondStage.setTitle("Set Scale");
+            secondStage.setScene(secondScene);
+
+            secondStage.show();
+        });
+        menuGeomtr.getItems().add(add);
+
+        add = new MenuItem("Scale");
+        add.setOnAction(event -> {
+            VBox layout = new VBox();
+            Scene secondScene = new Scene(layout, 150, 110);
+
+            TextField txtWidth = new TextField();
+            TextField txtHeight = new TextField();
+
+            txtWidth.setText(Integer.toString(bufferedImage.getWidth()));
+            txtHeight.setText(Integer.toString(bufferedImage.getHeight()));
+
+            // Width
+            Label labelWidth = new Label("Width");
+            layout.getChildren().add(labelWidth);
+            layout.getChildren().add(txtWidth);
+
+            // Height
+            Label labelHeight = new Label("Height");
+            layout.getChildren().add(labelHeight);
+            layout.getChildren().add(txtHeight);
+
+            Button btnResize = new Button();
+            btnResize.setText("Resize");
+
+            btnResize.setOnAction(event1 -> {
+                ResizeImage resizeImage = new ResizeImage(bufferedImage, Integer.parseInt(txtWidth.getText()), Integer.parseInt(txtHeight.getText()));
+                bufferedImage = resizeImage.resize();
+                this.iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                secondScene.getWindow().hide();
+            });
+            layout.getChildren().add(btnResize);
+
+            secondScene.setRoot(layout);
+            Stage secondStage = new Stage();
+            secondStage.setTitle("Set Scale");
+            secondStage.setScene(secondScene);
+
+            secondStage.show();
+        });
+        menuGeomtr.getItems().add(add);
+
+        add = new MenuItem("Rotate");
+        add.setOnAction(event -> {
+            VBox layout = new VBox();
+            Scene secondScene = new Scene(layout, 150, 110);
+
+            TextField txtRotate = new TextField();
+
+            txtRotate.setText("0");
+
+            // Angle
+            Label labelRotate = new Label("Angle");
+            layout.getChildren().add(labelRotate);
+            layout.getChildren().add(txtRotate);
+
+            Button btnRotate = new Button();
+            btnRotate.setText("Rotate");
+
+            btnRotate.setOnAction(event1 -> {
+                RotateImage rotateImage = new RotateImage(bufferedImage, Integer.parseInt(txtRotate.getText()));
+                bufferedImage = rotateImage.rotate();
+                this.iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                secondScene.getWindow().hide();
+            });
+            layout.getChildren().add(btnRotate);
+
+            secondScene.setRoot(layout);
+            Stage secondStage = new Stage();
+            secondStage.setTitle("Set Scale");
+            secondStage.setScene(secondScene);
+
+            secondStage.show();
+        });
+        menuGeomtr.getItems().add(add);
+
+        Menu menuSymmetry = new Menu("Symmetry");
+
+        add = new MenuItem("OX Axis");
+        add.setOnAction(event -> {
+            SymmetryImage symmetryImage = new SymmetryImage(bufferedImage);
+            symmetryImage.symmetryImageOX();
+            bufferedImage = symmetryImage.getSymmetryImage();
+            this.iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+        });
+        menuSymmetry.getItems().add(add);
+
+        add = new MenuItem("OY Axis");
+        add.setOnAction(event -> {
+            SymmetryImage symmetryImage = new SymmetryImage(bufferedImage);
+            symmetryImage.symmetryImageOY();
+            bufferedImage = symmetryImage.getSymmetryImage();
+            this.iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+        });
+        menuSymmetry.getItems().add(add);
+
+        add = new MenuItem("OX OY Axis");
+        add.setOnAction(event -> {
+            SymmetryImage symmetryImage = new SymmetryImage(bufferedImage);
+            symmetryImage.symmetryImageOXOY();
+            bufferedImage = symmetryImage.getSymmetryImage();
+            this.iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+        });
+        menuSymmetry.getItems().add(add);
+
+        menuGeomtr.getItems().add(menuSymmetry);
+
+
+        return menuGeomtr;
+    }
 }
