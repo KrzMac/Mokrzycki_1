@@ -3,6 +3,7 @@ import Algorithm.bin_morf.BinDilation;
 import Algorithm.bin_morf.BinErosion;
 import Algorithm.bin_morf.BinOpening;
 import Algorithm.filters.*;
+import Algorithm.gray_hist.GrayHistogram;
 import Algorithm.gray_morf.GrayClosing;
 import Algorithm.gray_morf.GrayDilation;
 import Algorithm.gray_morf.GrayErosion;
@@ -16,6 +17,9 @@ import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -62,7 +66,7 @@ public class Main extends Application {
         menuMorphology.getItems().addAll(addBinaryMorphology(), addGrayMorphology());
 
 
-        menuBar.getMenus().addAll(addFile(primaryStage), menuMorphology, addFilters(), addGeomtr());
+        menuBar.getMenus().addAll(addFile(primaryStage), menuMorphology, addFilters(), addGeomtr(), addHistogram());
         root.getChildren().addAll(menuBar);
 
         hbImage.getChildren().add(sp);
@@ -75,6 +79,105 @@ public class Main extends Application {
 
 
         primaryStage.show();
+    }
+
+    private Menu addHistogram() {
+        Menu menuHistogram = new Menu("Histogram");
+        MenuItem add;
+
+        add = new MenuItem("Gray Histogram");
+        add.setOnAction(event -> {
+            VBox layout = new VBox();
+            Scene secondScene = new Scene(layout, 300, 300);
+
+            final CategoryAxis xAxis = new CategoryAxis();
+            final NumberAxis yAxis = new NumberAxis();
+            final LineChart<String, Number> chartHistogram = new LineChart<>(xAxis, yAxis);
+            chartHistogram.setCreateSymbols(false);
+
+            GrayHistogram grayHistogram = new GrayHistogram(bufferedImage);
+            grayHistogram.histogram(bufferedImage);
+            chartHistogram.getData().addAll(
+                grayHistogram.getSeriesGray()
+            );
+
+            HBox hBox = new HBox();
+            hBox.getChildren().addAll(chartHistogram);
+            layout.getChildren().addAll(hBox);
+
+            secondScene.setRoot(layout);
+
+            Stage secondStage = new Stage();
+            secondStage.setTitle("Gray Histogram");
+            secondStage.setScene(secondScene);
+
+            secondStage.show();
+        });
+        menuHistogram.getItems().add(add);
+
+        add = new MenuItem("Equalization");
+        add.setOnAction(event -> {
+            VBox layout = new VBox();
+            Scene secondScene = new Scene(layout, 300, 300);
+
+            final CategoryAxis xAxis = new CategoryAxis();
+            final NumberAxis yAxis = new NumberAxis();
+            final LineChart<String, Number> chartHistogram = new LineChart<>(xAxis, yAxis);
+            chartHistogram.setCreateSymbols(false);
+
+            GrayHistogram grayHistogram = new GrayHistogram(bufferedImage);
+            bufferedImage = grayHistogram.getEqualization();
+            this.iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+            chartHistogram.getData().addAll(
+                    grayHistogram.getSeriesGray()
+            );
+
+            HBox hBox = new HBox();
+            hBox.getChildren().addAll(chartHistogram);
+            layout.getChildren().addAll(hBox);
+
+            secondScene.setRoot(layout);
+
+            Stage secondStage = new Stage();
+            secondStage.setTitle("Gray Histogram");
+            secondStage.setScene(secondScene);
+
+            secondStage.show();
+        });
+        menuHistogram.getItems().add(add);
+
+        add = new MenuItem("Stretching");
+        add.setOnAction(event -> {
+            VBox layout = new VBox();
+            Scene secondScene = new Scene(layout, 300, 300);
+
+            final CategoryAxis xAxis = new CategoryAxis();
+            final NumberAxis yAxis = new NumberAxis();
+            final LineChart<String, Number> chartHistogram = new LineChart<>(xAxis, yAxis);
+            chartHistogram.setCreateSymbols(false);
+
+            GrayHistogram grayHistogram = new GrayHistogram(bufferedImage);
+            bufferedImage = grayHistogram.getStretching();
+            this.iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+            chartHistogram.getData().addAll(
+                    grayHistogram.getSeriesGray()
+            );
+
+            HBox hBox = new HBox();
+            hBox.getChildren().addAll(chartHistogram);
+            layout.getChildren().addAll(hBox);
+
+            secondScene.setRoot(layout);
+
+            Stage secondStage = new Stage();
+            secondStage.setTitle("Gray Histogram");
+            secondStage.setScene(secondScene);
+
+            secondStage.show();
+        });
+        menuHistogram.getItems().add(add);
+
+        return menuHistogram;
     }
 
     private Menu addFile(Window primaryStage) {
