@@ -6,8 +6,9 @@ import Algorithm.gray_hist.*;
 import Algorithm.gray_morf.*;
 import Algorithm.oper_geometr.*;
 import javafx.application.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.*;
 import javafx.scene.chart.CategoryAxis;
@@ -28,11 +29,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
+import javafx.util.Callback;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends Application {
 
@@ -42,6 +45,7 @@ public class Main extends Application {
     final ScrollPane sp = new ScrollPane();
     private File file;
     Stage pS;
+    ListHistoryWindow listHistoryWindow;
 
     public static void main(String[] args) {
         launch(args);
@@ -59,6 +63,8 @@ public class Main extends Application {
 
         pS.setTitle("Wprowadzenie Przetwarzania Obrazów");
 
+        listHistoryWindow = new ListHistoryWindow();
+
         VBox root = new VBox(5);
         HBox hbImage = new HBox();
 
@@ -70,9 +76,80 @@ public class Main extends Application {
         Scene scene = new Scene(root, 800, 500, Color.BLANCHEDALMOND);
         pS.setScene(scene);
 
-
-
         primaryStage.show();
+
+        pS.setOnCloseRequest(event -> {
+            Platform.exit();
+        });
+    }
+
+    public class ListHistoryWindow {
+
+        List<History> historyList = new ArrayList<>();
+        ListView<History> listView;
+        ObservableList<History> observableList;
+        Stage stage;
+        int i = 0;
+
+        public ListHistoryWindow() {
+            setWindow();
+        }
+
+        public void setWindow() {
+            VBox layout = new VBox();
+            Scene secondScene = new Scene(layout, 300, 300);
+
+            listView = new ListView<>();
+            observableList = FXCollections.observableList(historyList);
+            listView.setItems(observableList);
+
+            listView.setCellFactory(new Callback<ListView<History>, ListCell<History>>() {
+                @Override
+                public ListCell<History> call(ListView<History> param) {
+                    ListCell<History> cell = new ListCell<History>(){
+
+                        @Override
+                        protected void updateItem(History t, boolean bln) {
+                            super.updateItem(t, bln);
+                            if (t != null) {
+                                setText(t.getId() + " " + t.getDescription());
+                            }
+                        }
+
+                    };
+
+                    return cell;
+                }
+            });
+
+            HBox hBox = new HBox();
+            hBox.getChildren().addAll(listView);
+            layout.getChildren().addAll(hBox);
+
+            secondScene.setRoot(layout);
+
+            stage = new Stage();
+            stage.setTitle("History");
+            stage.setScene(secondScene);
+
+            stage.setX(pS.getX() + pS.getWidth() - 400);
+            stage.setY(pS.getY() + pS.getHeight() - 300);
+
+            stage.show();
+        }
+
+        public void addToHistoryList(BufferedImage bufferedImage, String description) {
+            History history = new History(bufferedImage, description, i++);
+            historyList.add(history);
+
+            listView.setItems(FXCollections.observableArrayList());
+            listView.setItems(observableList);
+        }
+    }
+
+    public void addToHistory(BufferedImage bufferedImage, String description) {
+        listHistoryWindow.addToHistoryList(bufferedImage, description);
+
     }
 
     public class MyMenuBar extends MenuBar {
@@ -263,6 +340,7 @@ public class Main extends Application {
                     bufferedImage = resizeImage.resize();
                     iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
                     scene.getWindow().hide();
+                    addToHistory(bufferedImage, "Resize");
                 });
                 layout.getChildren().add(btnResize);
 
@@ -309,6 +387,7 @@ public class Main extends Application {
                     bufferedImage = resizeImage.resize();
                     iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
                     secondScene.getWindow().hide();
+                    addToHistory(bufferedImage, "Scale");
                 });
                 layout.getChildren().add(btnResize);
 
@@ -347,6 +426,7 @@ public class Main extends Application {
                     bufferedImage = rotateImage.rotate();
                     iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
                     secondScene.getWindow().hide();
+                    addToHistory(bufferedImage, "Rotate");
                 });
                 layout.getChildren().add(btnRotate);
 
@@ -379,6 +459,7 @@ public class Main extends Application {
                 }
                 bufferedImage = symmetryImage.getSymmetryImage();
                 iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                addToHistory(bufferedImage, "Symmetry");
             });
 
             return menuSymmetry;
