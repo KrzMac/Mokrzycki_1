@@ -118,4 +118,8 @@ public class GrayHistogram extends Algorithm {
     public XYChart.Series getSeriesGray() {
         return seriesGray;
     }
+
+    public int[] getHistogram() {
+        return histogram;
+    }
 }

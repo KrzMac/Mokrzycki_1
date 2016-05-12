@@ -6,6 +6,8 @@ import Algorithm.gray_hist.*;
 import Algorithm.gray_morf.*;
 import Algorithm.oper_geometr.*;
 import javafx.application.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.*;
 import javafx.scene.chart.CategoryAxis;
@@ -478,12 +480,14 @@ public class Main extends Application {
 
         MenuItem menuHistogram = setHistogram("Histogram", null),
                 menuEqualization = setOperation(0, "Equalization", null),
-                menuStretching = setOperation(1, "Stretching", null);
+                menuStretching = setOperation(1, "Stretching", null),
+                menuThreshold = setThreshold("Threshold", null),
+                menuOtsuThreshold = setOtsuThreshold("Otsu Threshold", null);
 
         public MenuRGBHistogram(String name) {
             super(name);
 
-            this.getItems().addAll(menuHistogram, menuEqualization, menuStretching);
+            this.getItems().addAll(menuHistogram, menuEqualization, menuStretching, menuThreshold, menuOtsuThreshold);
         }
 
         public MenuItem setHistogram(String name, ImageView imageView) {
@@ -520,6 +524,69 @@ public class Main extends Application {
             });
 
             return menuHistogram;
+        }
+
+        public MenuItem setOtsuThreshold(String name, ImageView imageView) {
+            MenuItem menuOtsu = new MenuItem(name, imageView);
+
+            menuOtsu.setOnAction(event -> {
+                ThresholdHistogram thresholdHistogram = new ThresholdHistogram(bufferedImage);
+                thresholdHistogram.otsuThreshold();
+
+                bufferedImage = thresholdHistogram.getTemplateImage();
+                iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+            });
+
+            return menuOtsu;
+        }
+
+        public MenuItem setThreshold(String name, ImageView imageView) {
+            MenuItem menuThreshold= new MenuItem(name, imageView);
+
+            menuThreshold.setOnAction(event -> {
+                ThresholdHistogram thresholdHistogram =  new ThresholdHistogram(bufferedImage);
+
+                VBox layout = new VBox();
+                Scene secondScene = new Scene(layout, 400, 100);
+
+                Label lblThreshold = new Label("Threshold");
+
+                Slider slider = new Slider();
+                slider.setMin(0);
+                slider.setMax(255);
+                slider.setValue(127);
+                slider.setShowTickLabels(true);
+                slider.setShowTickMarks(true);
+                slider.setMajorTickUnit(17);
+                slider.setMinorTickCount(5);
+                slider.setBlockIncrement(10);
+
+                Button btnThreshold = new Button();
+                btnThreshold.setText("Threshold");
+
+                slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+                    thresholdHistogram.threshold(newValue.intValue());
+                    iv1.setImage(SwingFXUtils.toFXImage(thresholdHistogram.getTemplateImage(), null));
+                });
+
+                layout.getChildren().add(lblThreshold);
+                layout.getChildren().add(slider);
+//                layout.getChildren().add(btnThreshold);
+
+                secondScene.setRoot(layout);
+                Stage secondStage = new Stage();
+                secondStage.setTitle("Set Threshold");
+                secondStage.setScene(secondScene);
+
+                secondStage.show();
+
+                secondStage.setOnCloseRequest(event1 -> {
+                    bufferedImage = thresholdHistogram.getTemplateImage();
+                    iv1.setImage(SwingFXUtils.toFXImage(thresholdHistogram.getTemplateImage(), null));
+                });
+            });
+
+            return menuThreshold;
         }
 
         public MenuItem setOperation(int operation, String name, ImageView imageView) {
