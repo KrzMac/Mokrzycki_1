@@ -38,6 +38,10 @@ public abstract class Algorithm {
         return this.grayImage;
     }
 
+    public BufferedImage getFilterImage() {
+        return filterImage;
+    }
+
     protected abstract void run();
 
     public BufferedImage setGrayImage(BufferedImage bufferedImage) {
@@ -57,4 +61,5 @@ public abstract class Algorithm {
 
         return image;
     }
+
 }

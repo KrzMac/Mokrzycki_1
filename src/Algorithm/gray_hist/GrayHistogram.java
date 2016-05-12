@@ -60,9 +60,21 @@ public class GrayHistogram extends Algorithm {
 
     private void stretching() {
         int g;
+        int minG = 255, maxG = 0;
 
         for (int x = 0; x < grayImage.getWidth(); x++) {
             for (int y = 0; y < grayImage.getHeight(); y++) {
+                if (getGrayPixel(x, y) > maxG)
+                    maxG = getGrayPixel(x ,y);
+                if (getGrayPixel(x, y) < minG)
+                    minG = getGrayPixel(x, y);
+            }
+        }
+
+        for (int x = 0; x < grayImage.getWidth(); x++) {
+            for (int y = 0; y < grayImage.getHeight(); y++) {
+//                g = ( 255 / (maxG - minG) ) * (getGrayPixel(x, y) - minG);
+
                 g = ((getGrayPixel(x, y) - 0) / (255 - 0) ) * 255;
                templateImage.setRGB(x, y, g);
             }
