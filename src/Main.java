@@ -540,7 +540,6 @@ public class Main extends Application {
 
             menuHistogram.setOnAction(event -> {
                 VBox layout = new VBox();
-                Scene secondScene = new Scene(layout, 300, 300);
 
                 final CategoryAxis xAxis = new CategoryAxis();
                 final NumberAxis yAxis = new NumberAxis();
@@ -553,10 +552,13 @@ public class Main extends Application {
                         grayHistogram.getSeriesGray()
                 );
 
+                chartHistogram.setStyle(".default-color0.chart-series-line { -fx-stroke: #b1b0af; }");
+
                 HBox hBox = new HBox();
                 hBox.getChildren().addAll(chartHistogram);
                 layout.getChildren().addAll(hBox);
 
+                Scene secondScene = new Scene(layout, chartHistogram.getPrefWidth(), chartHistogram.getPrefHeight());
                 secondScene.setRoot(layout);
 
                 Stage secondStage = new Stage();
@@ -564,6 +566,7 @@ public class Main extends Application {
                 secondStage.setScene(secondScene);
 
                 secondStage.show();
+                addToHistory(bufferedImage, "Gray Histogram");
             });
 
             return menuHistogram;
@@ -574,7 +577,6 @@ public class Main extends Application {
 
             menuHistogram.setOnAction(event -> {
                 VBox layout = new VBox();
-                Scene secondScene = new Scene(layout, 300, 300);
 
                 final CategoryAxis xAxis = new CategoryAxis();
                 final NumberAxis yAxis = new NumberAxis();
@@ -585,9 +587,11 @@ public class Main extends Application {
                 switch (operation) {
                     case 0:
                         bufferedImage = grayHistogram.getEqualization();
+                        addToHistory(bufferedImage, "Gray Equalization");
                         break;
                     case 1:
                         bufferedImage = grayHistogram.getStretching();
+                        addToHistory(bufferedImage, "Gray Stretching");
                         break;
                 }
 
@@ -596,10 +600,13 @@ public class Main extends Application {
                         grayHistogram.getSeriesGray()
                 );
 
+                chartHistogram.setStyle(".default-color0.chart-series-line { -fx-stroke: #b1b0af; }");
+
                 HBox hBox = new HBox();
                 hBox.getChildren().addAll(chartHistogram);
                 layout.getChildren().addAll(hBox);
 
+                Scene secondScene = new Scene(layout, chartHistogram.getPrefWidth(), chartHistogram.getPrefHeight());
                 secondScene.setRoot(layout);
 
                 Stage secondStage = new Stage();
@@ -633,11 +640,12 @@ public class Main extends Application {
 
             menuHistogram.setOnAction(event -> {
                 VBox layout = new VBox();
-                Scene secondScene = new Scene(layout, 300, 300);
+
 
                 final CategoryAxis xAxis = new CategoryAxis();
                 final NumberAxis yAxis = new NumberAxis();
-                final LineChart<String, Number> chartHistogram = new LineChart<String, Number>(xAxis, yAxis);
+                final LineChart<String, Number> chartHistogram
+                        = new LineChart<>(xAxis, yAxis);
                 chartHistogram.setCreateSymbols(false);
 
                 RGBHistogram rgbHistogram = new RGBHistogram(bufferedImage);
@@ -648,10 +656,15 @@ public class Main extends Application {
                         rgbHistogram.getSeriesBlue()
                 );
 
+                chartHistogram.setStyle(".default-color0.chart-series-line { -fx-stroke: #ff0000; }");
+                chartHistogram.setStyle(".default-color1.chart-series-line { -fx-stroke: #31ff00; }");
+                chartHistogram.setStyle(".default-color2.chart-series-line { -fx-stroke: #0048ff; }");
+
                 HBox hBox = new HBox();
                 hBox.getChildren().addAll(chartHistogram);
                 layout.getChildren().add(hBox);
 
+                Scene secondScene = new Scene(layout, chartHistogram.getPrefWidth(), chartHistogram.getPrefHeight());
                 secondScene.setRoot(layout);
 
                 Stage secondStage = new Stage();
@@ -659,6 +672,7 @@ public class Main extends Application {
                 secondStage.setScene(secondScene);
 
                 secondStage.show();
+                addToHistory(bufferedImage, "RGB Histogram");
             });
 
             return menuHistogram;
@@ -673,6 +687,8 @@ public class Main extends Application {
 
                 bufferedImage = thresholdHistogram.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+
+                addToHistory(bufferedImage, "Otsu Threshold");
             });
 
             return menuOtsu;
@@ -721,6 +737,7 @@ public class Main extends Application {
                 secondStage.setOnCloseRequest(event1 -> {
                     bufferedImage = thresholdHistogram.getTemplateImage();
                     iv1.setImage(SwingFXUtils.toFXImage(thresholdHistogram.getTemplateImage(), null));
+                    addToHistory(bufferedImage, "Threshold");
                 });
             });
 
@@ -732,7 +749,6 @@ public class Main extends Application {
 
             menuHistogram.setOnAction(event -> {
                 VBox layout = new VBox();
-                Scene secondScene = new Scene(layout, 300, 300);
 
                 final CategoryAxis xAxis = new CategoryAxis();
                 final NumberAxis yAxis = new NumberAxis();
@@ -743,9 +759,11 @@ public class Main extends Application {
                 switch (operation) {
                     case 0:
                         bufferedImage = rgbHistogram.getEqualization();
+                        addToHistory(bufferedImage, "RGB Equalization");
                         break;
                     case 1:
                         bufferedImage = rgbHistogram.getStretching();
+                        addToHistory(bufferedImage, "RGB Stretching");
                         break;
                 }
 
@@ -756,10 +774,15 @@ public class Main extends Application {
                         rgbHistogram.getSeriesBlue()
                 );
 
+                chartHistogram.setStyle(".default-color0.chart-series-line { -fx-stroke: #ff0000; }");
+                chartHistogram.setStyle(".default-color1.chart-series-line { -fx-stroke: #31ff00; }");
+                chartHistogram.setStyle(".default-color2.chart-series-line { -fx-stroke: #0048ff; }");
+
                 HBox hBox = new HBox();
                 hBox.getChildren().addAll(chartHistogram);
                 layout.getChildren().addAll(hBox);
 
+                Scene secondScene = new Scene(layout, chartHistogram.getPrefWidth(), chartHistogram.getPrefHeight());
                 secondScene.setRoot(layout);
 
                 Stage secondStage = new Stage();
@@ -794,6 +817,7 @@ public class Main extends Application {
                 BinErosion binErosion = new BinErosion(bufferedImage);
                 bufferedImage = binErosion.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(binErosion.getTemplateImage(), null));
+                addToHistory(bufferedImage, "Binary Erosion");
             });
 
             return menuErosion;
@@ -806,6 +830,7 @@ public class Main extends Application {
                 BinDilation binDilation = new BinDilation(bufferedImage);
                 bufferedImage = binDilation.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(binDilation.getTemplateImage(), null));
+                addToHistory(bufferedImage, "Binary Dilation");
             });
 
             return menuErosion;
@@ -818,6 +843,7 @@ public class Main extends Application {
                 BinOpening binOpening = new BinOpening(bufferedImage);
                 bufferedImage = binOpening.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(binOpening.getTemplateImage(), null));
+                addToHistory(bufferedImage, "Binary Opening");
             });
 
             return menuErosion;
@@ -830,6 +856,7 @@ public class Main extends Application {
                 BinClosing binClosing = new BinClosing(bufferedImage);
                 bufferedImage = binClosing.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(binClosing.getTemplateImage(), null));
+                addToHistory(bufferedImage, "Binary Closing");
             });
 
             return menuErosion;
@@ -857,6 +884,7 @@ public class Main extends Application {
                 GrayErosion grayErosion = new GrayErosion(bufferedImage);
                 bufferedImage = grayErosion.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(grayErosion.getTemplateImage(), null));
+                addToHistory(bufferedImage, "Gray Erosion");
             });
 
             return menuErosion;
@@ -869,6 +897,7 @@ public class Main extends Application {
                 GrayDilation grayDilation = new GrayDilation(bufferedImage);
                 bufferedImage = grayDilation.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(grayDilation.getTemplateImage(), null));
+                addToHistory(bufferedImage, "Gray Dilation");
             });
 
             return menuErosion;
@@ -881,6 +910,7 @@ public class Main extends Application {
                 GrayOpening grayOpening = new GrayOpening(bufferedImage);
                 bufferedImage = grayOpening.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(grayOpening.getTemplateImage(), null));
+                addToHistory(bufferedImage, "Gray Opening");
             });
 
             return menuErosion;
@@ -893,6 +923,7 @@ public class Main extends Application {
                 GrayClosing grayClosing = new GrayClosing(bufferedImage);
                 bufferedImage = grayClosing.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(grayClosing.getTemplateImage(), null));
+                addToHistory(bufferedImage, "Gray Closing");
             });
 
             return menuErosion;
@@ -943,6 +974,7 @@ public class Main extends Application {
 
                 bufferedImage = filterPass.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                addToHistory(bufferedImage, "Filter LowPass " + operation);
             });
 
             return menuLowPass;
@@ -971,6 +1003,7 @@ public class Main extends Application {
 
                 bufferedImage = filterPass.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                addToHistory(bufferedImage, "Filter HighPass " + operation);
             });
 
             return menuHighPass;
@@ -1011,6 +1044,7 @@ public class Main extends Application {
 
                 bufferedImage = filterPass.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                addToHistory(bufferedImage, "Filter Gradient " + name);
             });
 
             return menuHighPass;
@@ -1032,6 +1066,7 @@ public class Main extends Application {
                 }
 
                 iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                addToHistory(bufferedImage, "Filter Extreme " + name);
             });
 
             return menuExtreme;
@@ -1045,6 +1080,7 @@ public class Main extends Application {
 
                 bufferedImage = filterMedian.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                addToHistory(bufferedImage, "Filter Median");
             });
 
             return menuGradient;
