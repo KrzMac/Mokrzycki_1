@@ -10,6 +10,9 @@ import javafx.application.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
+import javafx.geometry.*;
+import javafx.geometry.Insets;
 import javafx.scene.*;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -24,10 +27,15 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.VBoxBuilder;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -92,22 +100,31 @@ public class Main extends Application {
         int i = 0;
 
         public ListHistoryWindow() {
-            setWindow();
-        }
-
-        public void setWindow() {
-            VBox layout = new VBox();
-            Scene secondScene = new Scene(layout, 300, 300);
-
             listView = new ListView<>();
             observableList = FXCollections.observableList(historyList);
             listView.setItems(observableList);
+
+            listView.setOnMouseClicked(event -> {
+                if (event.getButton().equals(MouseButton.PRIMARY)) {
+                    History selectedItem = listView.getSelectionModel().getSelectedItem();
+                    if (event.getClickCount() == 2) {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "You want back to " + selectedItem.getId() + " " + selectedItem.getDescription() + " ?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+                        alert.showAndWait();
+
+                        if (alert.getResult() == ButtonType.YES) {
+                            bufferedImage = selectedItem.getBufferedImage();
+                            iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+
+                            deleteHistoryFrom(selectedItem);
+                        }
+                    }
+                }
+            });
 
             listView.setCellFactory(new Callback<ListView<History>, ListCell<History>>() {
                 @Override
                 public ListCell<History> call(ListView<History> param) {
                     ListCell<History> cell = new ListCell<History>(){
-
                         @Override
                         protected void updateItem(History t, boolean bln) {
                             super.updateItem(t, bln);
@@ -121,6 +138,24 @@ public class Main extends Application {
                     return cell;
                 }
             });
+
+            setWindow();
+        }
+
+        private void deleteHistoryFrom(History selectedItem) {
+//            int size = historyList.size();
+//            for (int i = 0; i < size; i++)
+//                if (selectedItem.getId() < historyList.get(i).getId())
+//                    historyList.remove(i);
+//
+//
+//            listView.setItems(FXCollections.observableArrayList());
+//            listView.setItems(observableList);
+        }
+
+        public void setWindow() {
+            VBox layout = new VBox();
+            Scene secondScene = new Scene(layout, 300, 300);
 
             HBox hBox = new HBox();
             hBox.getChildren().addAll(listView);
@@ -145,6 +180,10 @@ public class Main extends Application {
             listView.setItems(FXCollections.observableArrayList());
             listView.setItems(observableList);
         }
+
+        public Stage getStage() {
+            return stage;
+        }
     }
 
     public void addToHistory(BufferedImage bufferedImage, String description) {
@@ -161,9 +200,23 @@ public class Main extends Application {
         MenuBinaryMorphology menuBinaryMorphology = new MenuBinaryMorphology("Binary Morphology");
         MenuGrayMorphology menuGrayMorphology = new MenuGrayMorphology("Gray Morphology");
         MenuFilters menuFilters = new MenuFilters("Filters");
+        Menu menuOptions = setMenuOptions();
 
         public MyMenuBar() {
-            this.getMenus().addAll(menuFile, menuGeometric, menuGrayHistogram, menuRGBHistogram, menuBinaryMorphology, menuGrayMorphology, menuFilters);
+            this.getMenus().addAll(menuFile, menuGeometric, menuGrayHistogram, menuRGBHistogram, menuBinaryMorphology, menuGrayMorphology, menuFilters, menuOptions);
+        }
+
+        public Menu setMenuOptions() {
+            Menu menuOptions = new Menu("Options");
+
+            MenuItem history = new MenuItem("History", null);
+            history.setOnAction(event -> {
+                if (!listHistoryWindow.getStage().isShowing())
+                    listHistoryWindow.setWindow();
+            });
+            menuOptions.getItems().add(history);
+
+            return menuOptions;
         }
 
     }
@@ -202,6 +255,7 @@ public class Main extends Application {
                     Image image1 = new Image(file.toURI().toString());
                     bufferedImage = SwingFXUtils.fromFXImage(image1, null);
                     iv1.setImage(image1);
+                    addToHistory(bufferedImage, "New image");
                 }
             });
 
@@ -232,6 +286,7 @@ public class Main extends Application {
                     graphics.dispose();
                     iv1.setImage(SwingFXUtils.toFXImage(image, null));
                     bufferedImage = image;
+                    addToHistory(bufferedImage, "New image");
                 }
             });
 
@@ -245,6 +300,7 @@ public class Main extends Application {
                 if (file != null) {
                     SaveImage saveImage = new SaveImage(file);
                     saveImage.save(bufferedImage);
+                    addToHistory(bufferedImage, "Save image");
                 }
             });
 
@@ -267,6 +323,7 @@ public class Main extends Application {
                 if (file != null) {
                     SaveImage saveImage = new SaveImage(file);
                     saveImage.save(bufferedImage);
+                    addToHistory(bufferedImage, "Save image");
                 }
             });
 

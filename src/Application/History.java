@@ -24,4 +24,8 @@ public class History {
     public int getId() {
         return id;
     }
+
+    public BufferedImage getBufferedImage() {
+        return bufferedImage;
+    }
 }
