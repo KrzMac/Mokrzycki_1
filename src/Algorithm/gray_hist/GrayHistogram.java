@@ -93,8 +93,6 @@ public class GrayHistogram extends Algorithm {
             lut[i] = sum * 255 / anzpixel;
         }
 
-        int i = 0;
-
         for (int x = 0; x < grayImage.getWidth(); x++) {
             for (int y = 0; y < grayImage.getHeight(); y++) {
                 int valueBefore = grayImage.getRaster().getPixel(x, y, iarray)[0];
@@ -102,7 +100,6 @@ public class GrayHistogram extends Algorithm {
                 iarray[0] = valueAfter;
 
                 templateImage.getRaster().setPixel(x, y, iarray);
-                i++;
             }
         }
     }

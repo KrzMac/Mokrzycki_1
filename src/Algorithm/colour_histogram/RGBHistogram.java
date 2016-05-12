@@ -63,11 +63,55 @@ public class RGBHistogram extends Algorithm {
 
 
     public BufferedImage getEqualization() {
+        histogram(filterImage);
+        equalization();
+        histogram(filterImage);
+
         return templateImage;
+    }
+
+    private void equalization() {
+        int redSum = 0, greenSum = 0, blueSum = 0;
+        int anzpixel = filterImage.getWidth() * filterImage.getHeight();
+        int[] iarray = new int[3];
+
+        float[] redLut = new float[anzpixel];
+        float[] greenLut = new float[anzpixel];
+        float[] blueLut = new float[anzpixel];
+
+        for (int i = 0; i < 256; ++i) {
+            redSum += redHistogram[i];
+            greenSum += greenHistogram[i];
+            blueSum += blueHistogram[i];
+
+            redLut[i] = redSum * 255 / anzpixel;
+            greenLut[i] = greenSum * 255 / anzpixel;
+            blueLut[i] = blueSum * 255 / anzpixel;
+        }
+
+        for (int x = 0; x < filterImage.getWidth(); x++) {
+            for (int y = 0; y < filterImage.getHeight(); y++) {
+                int valueBefore = filterImage.getRaster().getSample(x, y, 0);
+                int valueAfter = (int) redLut[valueBefore];
+                iarray[0] = valueAfter;
+
+                valueBefore = filterImage.getRaster().getSample(x, y, 1);
+                valueAfter = (int) greenLut[valueBefore];
+                iarray[1] = valueAfter;
+
+                valueBefore = filterImage.getRaster().getSample(x, y, 2);
+                valueAfter = (int) blueLut[valueBefore];
+                iarray[2] = valueAfter;
+
+
+                templateImage.getRaster().setPixel(x, y, iarray);
+            }
+        }
     }
 
     private void stretching() {
         int r, g, b;
+        Raster raster = filterImage.getRaster();
 
         int minR = 255, maxR = 0;
         int minG = 255, maxG = 0;
@@ -75,29 +119,29 @@ public class RGBHistogram extends Algorithm {
 
         for (int x = 0; x < filterImage.getWidth(); x++) {
             for (int y = 0; y < filterImage.getHeight(); y++) {
-                if (getRedPixel(x, y) > maxR)
-                    maxR = getRedPixel(x ,y);
-                if (getRedPixel(x, y) < minR)
-                    minR = getRedPixel(x ,y);
+                if (raster.getSample(x, y, 0) > maxR)
+                    maxR = raster.getSample(x, y, 0);
+                if (raster.getSample(x, y, 0) < minR)
+                    minR = raster.getSample(x, y, 0);
 
-                if (getGreenPixel(x, y) > maxG)
-                    maxG = getGreenPixel(x, y);
-                if (getGreenPixel(x, y) < minG)
-                    minG = getGreenPixel(x, y);
+                if (raster.getSample(x, y, 1) > maxG)
+                    maxG = raster.getSample(x, y, 1);
+                if (raster.getSample(x, y, 1) < minG)
+                    minG = raster.getSample(x, y, 1);
 
-                if (getBluePixel(x ,y) > maxB)
-                    maxB = getBluePixel(x ,y);
-                if (getBluePixel(x ,y) < minB)
-                    minB = getBluePixel(x ,y);
+                if (raster.getSample(x, y, 2) > maxB)
+                    maxB = raster.getSample(x, y, 2);
+                if (raster.getSample(x, y, 2) < minB)
+                    minB = raster.getSample(x, y, 2);
             }
         }
 
 
         for (int x = 0; x < filterImage.getWidth(); x++) {
             for (int y = 0; y < filterImage.getHeight(); y++) {
-                r = ( 255 / (maxR - minR) ) * (getRedPixel(x ,y) - minR);
-                g = ( 255 / (maxG - minG) ) * (getGreenPixel(x ,y) - minG);
-                b = ( 255 / (maxB - minB) ) * (getBluePixel(x ,y) - minB);
+                r = ( 255 / (maxR - minR) ) * (raster.getSample(x, y, 0) - minR);
+                g = ( 255 / (maxG - minG) ) * (raster.getSample(x, y, 1) - minG);
+                b = ( 255 / (maxB - minB) ) * (raster.getSample(x, y, 2) - minB);
 
                 r = r > 255 ? 255 :
                         r < 0 ? 0 : r;
