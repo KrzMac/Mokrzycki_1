@@ -1,4 +1,8 @@
 import Algorithm.bin_morf.*;
+import Algorithm.bin_oper_logicz.LogicalProduct;
+import Algorithm.bin_oper_logicz.LogicalSum;
+import Algorithm.bin_oper_logicz.LogicalXOR;
+import Algorithm.bin_oper_logicz.Negation;
 import Application.*;
 import Algorithm.colour_histogram.*;
 import Algorithm.filters.*;
@@ -200,10 +204,11 @@ public class Main extends Application {
         MenuBinaryMorphology menuBinaryMorphology = new MenuBinaryMorphology("Binary Morphology");
         MenuGrayMorphology menuGrayMorphology = new MenuGrayMorphology("Gray Morphology");
         MenuFilters menuFilters = new MenuFilters("Filters");
+        MenuLogBinary menuBinLog = new MenuLogBinary("Binary logical operations");
         Menu menuOptions = setMenuOptions();
 
         public MyMenuBar() {
-            this.getMenus().addAll(menuFile, menuGeometric, menuGrayHistogram, menuRGBHistogram, menuBinaryMorphology, menuGrayMorphology, menuFilters, menuOptions);
+            this.getMenus().addAll(menuFile, menuBinLog,menuGeometric, menuGrayHistogram, menuRGBHistogram, menuBinaryMorphology, menuGrayMorphology, menuFilters, menuOptions);
         }
 
         public Menu setMenuOptions() {
@@ -1084,6 +1089,111 @@ public class Main extends Application {
             });
 
             return menuGradient;
+        }
+    }
+
+    public class MenuLogBinary extends MyMenu {
+
+        MenuItem negation = setNegation("Negation", null),
+            logicalSum = setLogicalSum("Logical sum", null),
+            logicalProduct = setLogicalProduct("Logical product", null),
+            logicalXOR = setLogicalXOR("Logical XOR", null);
+
+        public MenuLogBinary(String name) {
+            super(name);
+
+            this.getItems().addAll(negation, logicalSum, logicalProduct, logicalXOR);
+        }
+
+        public MenuItem setNegation(String name, ImageView imageView) {
+            MenuItem menuNegation = new MenuItem(name, imageView);
+
+            menuNegation.setOnAction(event -> {
+                Negation negation = new Negation(bufferedImage);
+
+                bufferedImage = negation.getTemplateImage();
+                iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                addToHistory(bufferedImage, "Binary negation");
+            });
+
+            return menuNegation;
+        }
+
+        public MenuItem setLogicalSum(String name, ImageView imageView) {
+            MenuItem menuLogicalSum = new MenuItem(name, imageView);
+
+            menuLogicalSum.setOnAction(event -> {
+                BufferedImage secondImage = null;
+
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(file.getParentFile());
+
+                file = fileChooser.showOpenDialog(pS);
+                if (file != null) {
+                    Image image1 = new Image(file.toURI().toString());
+                    secondImage = SwingFXUtils.fromFXImage(image1, null);
+
+                    LogicalSum logicalSum = new LogicalSum(bufferedImage, secondImage);
+
+                    bufferedImage = logicalSum.getTemplateImage();
+                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                    addToHistory(bufferedImage, "Logical sum");
+                }
+            });
+
+            return menuLogicalSum;
+        }
+
+        public MenuItem setLogicalProduct(String name, ImageView imageView) {
+            MenuItem menuLogicalProduct = new MenuItem(name, imageView);
+
+            menuLogicalProduct.setOnAction(event -> {
+                BufferedImage secondImage = null;
+
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(file.getParentFile());
+
+                file = fileChooser.showOpenDialog(pS);
+                if (file != null) {
+                    Image image1 = new Image(file.toURI().toString());
+                    secondImage = SwingFXUtils.fromFXImage(image1, null);
+
+                    LogicalProduct logicalProduct = new LogicalProduct(bufferedImage, secondImage);
+
+                    bufferedImage = logicalProduct.getTemplateImage();
+                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                    addToHistory(bufferedImage, "Logical product");
+                }
+
+            });
+
+            return menuLogicalProduct;
+        }
+
+        public MenuItem setLogicalXOR(String name, ImageView imageView) {
+            MenuItem menuXOR = new MenuItem(name, imageView);
+
+            menuXOR.setOnAction(event -> {
+                BufferedImage secondImage = null;
+
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(file.getParentFile());
+
+                file = fileChooser.showOpenDialog(pS);
+                if (file != null) {
+                    Image image1 = new Image(file.toURI().toString());
+                    secondImage = SwingFXUtils.fromFXImage(image1, null);
+
+                    LogicalXOR logicalXOR = new LogicalXOR(bufferedImage, secondImage);
+
+                    bufferedImage = logicalXOR.getTemplateImage();
+                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                    addToHistory(bufferedImage, "Logical XOR");
+                }
+
+            });
+
+            return menuXOR;
         }
     }
 }
