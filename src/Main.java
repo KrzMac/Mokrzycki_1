@@ -3,6 +3,7 @@ import Algorithm.bin_oper_logicz.LogicalProduct;
 import Algorithm.bin_oper_logicz.LogicalSum;
 import Algorithm.bin_oper_logicz.LogicalXOR;
 import Algorithm.bin_oper_logicz.Negation;
+import Algorithm.gray_oper_arytm.*;
 import Application.*;
 import Algorithm.colour_histogram.*;
 import Algorithm.filters.*;
@@ -14,9 +15,6 @@ import javafx.application.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
-import javafx.geometry.*;
-import javafx.geometry.Insets;
 import javafx.scene.*;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -32,14 +30,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.VBoxBuilder;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -198,17 +192,18 @@ public class Main extends Application {
     public class MyMenuBar extends MenuBar {
 
         MenuFile menuFile = new MenuFile("File");
+        MenuLogBinary menuBinLog = new MenuLogBinary("Binary logical operations");
+        MenuGrayArytm menuGrayArytm = new MenuGrayArytm("Gray Arythmetics");
         MenuGeometric menuGeometric = new MenuGeometric("Geometric");
         MenuGrayHistogram menuGrayHistogram = new MenuGrayHistogram("Gray Histogram");
         MenuRGBHistogram menuRGBHistogram = new MenuRGBHistogram("RGB Histogram");
         MenuBinaryMorphology menuBinaryMorphology = new MenuBinaryMorphology("Binary Morphology");
         MenuGrayMorphology menuGrayMorphology = new MenuGrayMorphology("Gray Morphology");
         MenuFilters menuFilters = new MenuFilters("Filters");
-        MenuLogBinary menuBinLog = new MenuLogBinary("Binary logical operations");
         Menu menuOptions = setMenuOptions();
 
         public MyMenuBar() {
-            this.getMenus().addAll(menuFile, menuBinLog,menuGeometric, menuGrayHistogram, menuRGBHistogram, menuBinaryMorphology, menuGrayMorphology, menuFilters, menuOptions);
+            this.getMenus().addAll(menuFile, menuBinLog, menuGrayArytm, menuGeometric, menuGrayHistogram, menuRGBHistogram, menuBinaryMorphology, menuGrayMorphology, menuFilters, menuOptions);
         }
 
         public Menu setMenuOptions() {
@@ -1194,6 +1189,327 @@ public class Main extends Application {
             });
 
             return menuXOR;
+        }
+    }
+
+    public class MenuGrayArytm extends MyMenu {
+
+        MenuItem imagesSum = setImagesSum("Images sum", null),
+            imageSumConst = setImageSumWithConst("Image sum with constant", null),
+            multiImages = setMultiplicationImages("Images multiplication", null),
+            multiImagesConst = setImageMultWithConst("Images multiplication with constant", null),
+            imageExp = setImageExponentation("Image exponentation", null),
+            imagesDividing = setImageDividing("Image dividing", null),
+            imageDivideConst = setImageDivideConst("Image divide with const", null),
+            imageRoots = setImageRoots("Image root", null),
+            imageLog = setImageLog("Image logarithm", null);
+
+        public MenuGrayArytm(String name) {
+            super(name);
+
+            this.getItems().addAll(imagesSum, imageSumConst, multiImages, multiImagesConst, imageExp, imagesDividing,
+                    imageDivideConst, imageRoots, imageLog);
+        }
+
+        public MenuItem setImagesSum(String name, ImageView imageView) {
+            MenuItem menuImagesSum = new MenuItem(name, imageView);
+
+            menuImagesSum.setOnAction(event -> {
+                BufferedImage secondImage = null;
+
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(file.getParentFile());
+
+                file = fileChooser.showOpenDialog(pS);
+                if (file != null) {
+                    Image image1 = new Image(file.toURI().toString());
+                    secondImage = SwingFXUtils.fromFXImage(image1, null);
+
+                    ImagesSum imagesSum = new ImagesSum(bufferedImage, secondImage);
+
+                    bufferedImage = imagesSum.getTemplateImage();
+                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                    addToHistory(bufferedImage, "Images sum");
+                }
+            });
+
+            return menuImagesSum;
+        }
+
+        public MenuItem setImageSumWithConst(String name, ImageView imageView) {
+            MenuItem menuImagesSum = new MenuItem(name, imageView);
+
+            menuImagesSum.setOnAction(event -> {
+                BufferedImage tBufferedImage = bufferedImage;
+                VBox layout = new VBox();
+                Scene scene = new Scene(layout, 150, 110);
+
+                TextField txtConstant = new TextField();
+
+                txtConstant.setText("0");
+
+                // Constant
+                Label labelConstant = new Label("Constant");
+                layout.getChildren().add(labelConstant);
+                txtConstant.textProperty().addListener(((observable, oldValue, newValue) -> {
+//                    ImageSumConst isc = new ImageSumConst(bufferedImage, Integer.parseInt(newValue));
+//                    bufferedImage = isc.getTemplateImage();
+//                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                }));
+                layout.getChildren().add(txtConstant);
+
+                Button btnCalculate = new Button();
+                btnCalculate.setText("Calculate");
+
+                btnCalculate.setOnAction(event1 -> {
+                    ImageSumConst isc = new ImageSumConst(bufferedImage, Integer.parseInt(txtConstant.getText()));
+                    bufferedImage = isc.getTemplateImage();
+                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                    scene.getWindow().hide();
+                    addToHistory(bufferedImage, "Image sum with constant");
+                });
+                layout.getChildren().add(btnCalculate);
+
+                scene.setRoot(layout);
+
+                Stage stage = new Stage();
+                stage.setTitle("Image sum with constant");
+                stage.setScene(scene);
+
+                stage.setOnCloseRequest(event1 -> {
+                    iv1.setImage(SwingFXUtils.toFXImage(tBufferedImage, null));
+                });
+
+                stage.show();
+            });
+
+            return menuImagesSum;
+        }
+
+        public MenuItem setMultiplicationImages(String name, ImageView imageView) {
+            MenuItem menuMultImage = new MenuItem(name, imageView);
+
+            menuMultImage.setOnAction(event -> {
+                BufferedImage secondImage = null;
+
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(file.getParentFile());
+
+                file = fileChooser.showOpenDialog(pS);
+                if (file != null) {
+                    Image image1 = new Image(file.toURI().toString());
+                    secondImage = SwingFXUtils.fromFXImage(image1, null);
+
+                    ImageMultiplication multiImage = new ImageMultiplication(bufferedImage, secondImage);
+
+                    bufferedImage = multiImage.getTemplateImage();
+                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                    addToHistory(bufferedImage, "Images multiplication");
+                }
+            });
+
+            return menuMultImage;
+        }
+
+        public MenuItem setImageMultWithConst(String name, ImageView imageView) {
+            MenuItem menuImagesSum = new MenuItem(name, imageView);
+
+            menuImagesSum.setOnAction(event -> {
+                BufferedImage tBufferedImage = bufferedImage;
+                VBox layout = new VBox();
+                Scene scene = new Scene(layout, 150, 110);
+
+                TextField txtConstant = new TextField();
+
+                txtConstant.setText("0");
+
+                // Constant
+                Label labelConstant = new Label("Constant");
+                layout.getChildren().add(labelConstant);
+                txtConstant.textProperty().addListener(((observable, oldValue, newValue) -> {
+//                    ImageMultiplicationConst imc = new ImageMultiplicationConst(bufferedImage, Integer.parseInt(newValue));
+//                    bufferedImage = imc.getTemplateImage();
+//                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                }));
+                layout.getChildren().add(txtConstant);
+
+                Button btnCalculate = new Button();
+                btnCalculate.setText("Calculate");
+
+                btnCalculate.setOnAction(event1 -> {
+                    ImageMultiplicationConst imc = new ImageMultiplicationConst(bufferedImage, Integer.parseInt(txtConstant.getText()));
+                    bufferedImage = imc.getTemplateImage();
+                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                    scene.getWindow().hide();
+                    addToHistory(bufferedImage, "Image multiplication with constant");
+                });
+                layout.getChildren().add(btnCalculate);
+
+                scene.setRoot(layout);
+
+                Stage stage = new Stage();
+                stage.setTitle("Image multiplication with constant");
+                stage.setScene(scene);
+
+                stage.setOnCloseRequest(event1 -> {
+                    iv1.setImage(SwingFXUtils.toFXImage(tBufferedImage, null));
+                });
+
+                stage.show();
+            });
+
+            return menuImagesSum;
+        }
+
+        public MenuItem setImageExponentation(String name, ImageView imageView) {
+            MenuItem menuImagesExp = new MenuItem(name, imageView);
+
+            menuImagesExp.setOnAction(event -> {
+                BufferedImage tBufferedImage = bufferedImage;
+                VBox layout = new VBox();
+                Scene scene = new Scene(layout, 150, 110);
+
+                TextField txtConstant = new TextField();
+
+                txtConstant.setText("0");
+
+                // Constant
+                Label labelConstant = new Label("Constant");
+                layout.getChildren().add(labelConstant);
+                txtConstant.textProperty().addListener(((observable, oldValue, newValue) -> {
+//                    ImageExponentation ie = new ImageExponentation(bufferedImage, Integer.parseInt(newValue));
+//                    bufferedImage = ie.getTemplateImage();
+//                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                }));
+                layout.getChildren().add(txtConstant);
+
+                Button btnCalculate = new Button();
+                btnCalculate.setText("Calculate");
+
+                btnCalculate.setOnAction(event1 -> {
+                    ImageExponentation ie = new ImageExponentation(bufferedImage, Integer.parseInt(txtConstant.getText()));
+                    bufferedImage = ie.getTemplateImage();
+                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                    scene.getWindow().hide();
+                    addToHistory(bufferedImage, "Image exponentation with constant");
+                });
+                layout.getChildren().add(btnCalculate);
+
+                scene.setRoot(layout);
+
+                Stage stage = new Stage();
+                stage.setTitle("Image exponentation with constant");
+                stage.setScene(scene);
+
+                stage.setOnCloseRequest(event1 -> {
+                    iv1.setImage(SwingFXUtils.toFXImage(tBufferedImage, null));
+                });
+
+                stage.show();
+            });
+
+            return menuImagesExp;
+        }
+
+        public MenuItem setImageDividing(String name, ImageView imageView) {
+            MenuItem menuDivide = new MenuItem(name, imageView);
+
+            menuDivide.setOnAction(event -> {
+                BufferedImage secondImage = null;
+
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(file.getParentFile());
+
+                file = fileChooser.showOpenDialog(pS);
+                if (file != null) {
+                    Image image1 = new Image(file.toURI().toString());
+                    secondImage = SwingFXUtils.fromFXImage(image1, null);
+
+                    ImagesDividing imageDivide = new ImagesDividing(bufferedImage, secondImage);
+
+                    bufferedImage = imageDivide.getTemplateImage();
+                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                    addToHistory(bufferedImage, "Images dividing");
+                }
+            });
+
+            return menuDivide;
+        }
+
+        public MenuItem setImageDivideConst(String name, ImageView imageView) {
+            MenuItem menuDivide = new MenuItem(name, imageView);
+
+            menuDivide.setOnAction(event -> {
+                BufferedImage tBufferedImage = bufferedImage;
+                VBox layout = new VBox();
+                Scene scene = new Scene(layout, 150, 110);
+
+                TextField txtConstant = new TextField();
+
+                txtConstant.setText("0");
+
+                // Constant
+                Label labelConstant = new Label("Constant");
+                layout.getChildren().add(labelConstant);
+                txtConstant.textProperty().addListener(((observable, oldValue, newValue) -> {
+//                    ImageDivideConst idc = new ImageDivideConst(bufferedImage, Integer.parseInt(newValue));
+//                    bufferedImage = idc.getTemplateImage();
+//                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                }));
+                layout.getChildren().add(txtConstant);
+
+                Button btnCalculate = new Button();
+                btnCalculate.setText("Calculate");
+
+                btnCalculate.setOnAction(event1 -> {
+                    ImageDivideConst idc = new ImageDivideConst(bufferedImage, Integer.parseInt(txtConstant.getText()));
+                    bufferedImage = idc.getTemplateImage();
+                    iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                    scene.getWindow().hide();
+                    addToHistory(bufferedImage, "Image divide with constant");
+                });
+                layout.getChildren().add(btnCalculate);
+
+                scene.setRoot(layout);
+
+                Stage stage = new Stage();
+                stage.setTitle("Image divide with constant");
+                stage.setScene(scene);
+
+                stage.setOnCloseRequest(event1 -> {
+                    iv1.setImage(SwingFXUtils.toFXImage(tBufferedImage, null));
+                });
+
+                stage.show();
+            });
+
+            return menuDivide;
+        }
+
+        public MenuItem setImageRoots(String name, ImageView imageView) {
+            MenuItem menuImageRoots = new MenuItem(name, imageView);
+
+            menuImageRoots.setOnAction(event -> {
+                ImageRoots imageRoots = new ImageRoots(bufferedImage);
+                bufferedImage = imageRoots.getTemplateImage();
+                iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                addToHistory(bufferedImage, "Image Roots");
+            });
+
+            return menuImageRoots;
+        }
+
+        public MenuItem setImageLog(String name, ImageView imageView) {
+            MenuItem menuImageLog = new MenuItem(name, imageView);
+
+            menuImageLog.setOnAction(event -> {
+                ImageLog imageLog = new ImageLog(bufferedImage);
+                bufferedImage = imageLog.getTemplateImage();
+                iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
+                addToHistory(bufferedImage, "Image Logarithm");
+            });
+
+            return menuImageLog;
         }
     }
 }
