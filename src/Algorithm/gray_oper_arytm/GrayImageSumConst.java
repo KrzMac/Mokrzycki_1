@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 /**
  * Created by MSI on 2016-05-15.
  */
-public class ImageDivideConst extends Operations {
+public class GrayImageSumConst extends Operations {
 
-    public ImageDivideConst(BufferedImage firstImage, int constant) {
+    public GrayImageSumConst(BufferedImage firstImage, int constant) {
         super(firstImage, constant);
     }
 
@@ -15,7 +15,7 @@ public class ImageDivideConst extends Operations {
     public void makeAlgorithm(int x, int y) {
         int firstPixel = getGrayPixel(firstImage, x, y);
 
-        firstPixel /= constant;
+        firstPixel += constant;
 
         templateImage.setRGB(x, y, firstPixel);
     }

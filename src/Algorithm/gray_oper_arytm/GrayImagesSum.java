@@ -6,9 +6,9 @@ import java.awt.image.BufferedImage;
 /**
  * Created by MSI on 2016-05-15.
  */
-public class ImagesSum extends Operations {
+public class GrayImagesSum extends Operations {
 
-    public ImagesSum(BufferedImage firstImage, BufferedImage secondImage) {
+    public GrayImagesSum(BufferedImage firstImage, BufferedImage secondImage) {
         super(firstImage, secondImage);
     }
 

@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 /**
  * Created by MSI on 2016-05-15.
  */
-public class ImageMultiplicationConst extends Operations {
+public class GrayImageMultiplicationConst extends Operations {
 
-    public ImageMultiplicationConst(BufferedImage firstImage, int constant) {
+    public GrayImageMultiplicationConst(BufferedImage firstImage, int constant) {
         super(firstImage, constant);
     }
 

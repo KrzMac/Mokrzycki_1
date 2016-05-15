@@ -5,19 +5,18 @@ import java.awt.image.BufferedImage;
 /**
  * Created by MSI on 2016-05-15.
  */
-public class ImageRoots extends Operations {
+public class GrayImageExponentation extends Operations {
 
-    public ImageRoots(BufferedImage firstImage) {
-        super(firstImage);
+    public GrayImageExponentation(BufferedImage firstImage, int constant) {
+        super(firstImage, constant);
     }
 
     @Override
     public void makeAlgorithm(int x, int y) {
         int firstPixel = getGrayPixel(firstImage, x, y);
 
-        firstPixel = (int) Math.sqrt((double)firstPixel);
+        firstPixel = (int)Math.pow(firstPixel, constant);
 
         templateImage.setRGB(x, y, firstPixel);
     }
-
 }

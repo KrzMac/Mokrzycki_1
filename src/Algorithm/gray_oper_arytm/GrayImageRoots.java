@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 /**
  * Created by MSI on 2016-05-15.
  */
-public class ImageLog extends Operations {
+public class GrayImageRoots extends Operations {
 
-    public ImageLog(BufferedImage firstImage) {
+    public GrayImageRoots(BufferedImage firstImage) {
         super(firstImage);
     }
 
@@ -15,7 +15,7 @@ public class ImageLog extends Operations {
     public void makeAlgorithm(int x, int y) {
         int firstPixel = getGrayPixel(firstImage, x, y);
 
-        firstPixel = (int) Math.log((double)firstPixel);
+        firstPixel = (int) Math.sqrt((double)firstPixel);
 
         templateImage.setRGB(x, y, firstPixel);
     }

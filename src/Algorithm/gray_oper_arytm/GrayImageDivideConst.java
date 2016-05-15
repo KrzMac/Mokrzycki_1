@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 /**
  * Created by MSI on 2016-05-15.
  */
-public class ImageExponentation extends Operations {
+public class GrayImageDivideConst extends Operations {
 
-    public ImageExponentation(BufferedImage firstImage, int constant) {
+    public GrayImageDivideConst(BufferedImage firstImage, int constant) {
         super(firstImage, constant);
     }
 
@@ -15,8 +15,10 @@ public class ImageExponentation extends Operations {
     public void makeAlgorithm(int x, int y) {
         int firstPixel = getGrayPixel(firstImage, x, y);
 
-        firstPixel = (firstPixel)^constant;
+        if (constant != 0)
+            firstPixel /= constant;
 
         templateImage.setRGB(x, y, firstPixel);
     }
+
 }
