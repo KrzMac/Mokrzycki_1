@@ -8,8 +8,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
 /**
- * Created by MSI on 2016-05-12.
+ * Main class for RGB image histogram operations.
+ *
+ * @author Krzysztof Macioszek
  */
+
 public class RGBHistogram extends Algorithm {
 
     BufferedImage templateImage;

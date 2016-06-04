@@ -6,8 +6,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
 /**
- * Created by MSI on 2016-05-15.
+ * Main abstract class for image logic operations.
+ *
+ * @author Krzysztof Macioszek
  */
+
 public abstract class Logical extends Algorithm {
 
     BufferedImage firstImage, secondImage, templateImage;
@@ -24,6 +27,19 @@ public abstract class Logical extends Algorithm {
         this.templateImage = new BufferedImage(binaryImage.getWidth(), binaryImage.getHeight(), binaryImage.getType());
 
         if (firstImage != null && secondImage != null)
+            run();
+    }
+
+    public Logical(BufferedImage firstImage) {
+        super(firstImage);
+
+        this.firstImage = setBinaryImage(firstImage);
+        this.firstRaster = this.firstImage.getRaster();
+
+        this.templateImage = new BufferedImage(binaryImage.getWidth(), binaryImage.getHeight(), binaryImage.getType());
+
+
+        if (firstImage != null)
             run();
     }
 

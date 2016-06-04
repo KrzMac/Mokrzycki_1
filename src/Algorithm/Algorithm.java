@@ -4,8 +4,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by MSI on 2016-04-18.
+ * Main abstract class for all algorithms.
+ *
+ * @author Krzysztof Macioszek
  */
+
 public abstract class Algorithm {
 
     protected BufferedImage bufferedImage;

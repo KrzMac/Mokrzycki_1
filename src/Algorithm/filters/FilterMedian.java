@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
 /**
- * Created by MSI on 2016-05-10.
+ * @author Krzysztof Macioszek
  */
 public class FilterMedian extends Algorithm {
 

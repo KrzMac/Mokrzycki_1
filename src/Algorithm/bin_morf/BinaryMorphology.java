@@ -6,13 +6,22 @@ import javax.xml.crypto.Data;
 import java.awt.image.*;
 
 /**
- * Created by MSI on 2016-04-18.
+ * Main abstract class for binary morphology algorithms.
+ *
+ * @author Krzysztof Macioszek
  */
+
 public abstract class BinaryMorphology extends Algorithm {
 
     private BufferedImage templateImage;
     private Raster templateRaster;
     private int size = 2;
+
+    /**
+     * Class constructor with input image
+     *
+     * @param bufferedImage input image
+     */
 
     public BinaryMorphology(BufferedImage bufferedImage) {
         super(bufferedImage);
@@ -20,6 +29,10 @@ public abstract class BinaryMorphology extends Algorithm {
         this.templateRaster = binaryImage.getData();
         this.templateImage = new BufferedImage(getBinaryImage().getWidth(), getBinaryImage().getHeight(), getBinaryImage().getType());
     }
+
+    /**
+     * Method from Algorithms class
+     */
 
     @Override
     protected void run() {

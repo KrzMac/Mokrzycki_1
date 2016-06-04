@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
 /**
- * Created by MSI on 2016-05-15.
+ * @author Krzysztof Macioszek
  */
 public class LogicalSum extends Logical {
 

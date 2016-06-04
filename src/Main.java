@@ -1,8 +1,8 @@
 import Algorithm.bin_morf.*;
+import Algorithm.bin_oper_logicz.LogicalNegation;
 import Algorithm.bin_oper_logicz.LogicalProduct;
 import Algorithm.bin_oper_logicz.LogicalSum;
 import Algorithm.bin_oper_logicz.LogicalXOR;
-import Algorithm.bin_oper_logicz.Negation;
 import Algorithm.color_oper_arytm.*;
 import Algorithm.gray_oper_arytm.*;
 import Algorithm.gray_oper_arytm.GrayImagesSum;
@@ -44,6 +44,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * @author Krzysztof Macioszek
+ */
 
 public class Main extends Application {
 
@@ -944,8 +948,12 @@ public class Main extends Application {
         public MenuFilters(String name) {
             super(name);
 
-            lowPass.getItems().addAll(setLowPass(0, "1", null), setLowPass(1, "2", null), setLowPass(2, "3", null), setLowPass(3, "4", null));
-            highPass.getItems().addAll(setHighPass(0, "1", null), setHighPass(1, "2", null), setHighPass(2, "3", null), setHighPass(3, "4", null));
+            lowPass.getItems().addAll(setLowPass(0, "Average", null), setLowPass(1, "Square", null), setLowPass(2, "Circular", null),
+                    setLowPass(3, "LP 1", null), setLowPass(4, "LP 2", null), setLowPass(5, "LP 3", null), setLowPass(6, "Piramid", null),
+                    setLowPass(7, "Conical", null), setLowPass(8, "Gauss 1", null), setLowPass(9, "Gauss 2", null), setLowPass(10, "Gauss 3", null),
+                    setLowPass(11, "Gauss 4", null), setLowPass(12, "Gauss 5", null));
+            highPass.getItems().addAll(setHighPass(0, "Delete average", null), setHighPass(1, "HP 1", null), setHighPass(2, "HP 2", null),
+                    setHighPass(3, "HP 3", null));
             gradient.getItems().addAll(setGradient("East", null), setGradient("South-East", null), setGradient("North-East", null),
                     setGradient("West", null), setGradient("South-West", null), setGradient("North-West", null), setGradient("North", null),
                     setGradient("South", null));
@@ -961,17 +969,45 @@ public class Main extends Application {
                 FilterPass filterPass = new FilterPass(bufferedImage);
                 switch (operation) {
                     case 0:
-                        filterPass.setArrayMask(FilterList.lowPass1());
+                        filterPass.setArrayMask(FilterList.lowPassAverage());
                         break;
                     case 1:
-                        filterPass.setArrayMask(FilterList.lowPass2());
+                        filterPass.setArrayMask(FilterList.lowPassSquare());
                         break;
                     case 2:
-                        filterPass.setArrayMask(FilterList.lowPass3());
+                        filterPass.setArrayMask(FilterList.lowPassCircular());
                         break;
                     case 3:
-                        filterPass.setArrayMask(FilterList.lowPass4());
+                        filterPass.setArrayMask(FilterList.lowPass1());
                         break;
+                    case 4:
+                        filterPass.setArrayMask(FilterList.lowPass2());
+                        break;
+                    case 5:
+                        filterPass.setArrayMask(FilterList.lowPass3());
+                        break;
+                    case 6:
+                        filterPass.setArrayMask(FilterList.lowPassPiramid());
+                        break;
+                    case 7:
+                        filterPass.setArrayMask(FilterList.lowPassConical());
+                        break;
+                    case 8:
+                        filterPass.setArrayMask(FilterList.lowPassGauss1());
+                        break;
+                    case 9:
+                        filterPass.setArrayMask(FilterList.lowPassGauss2());
+                        break;
+                    case 10:
+                        filterPass.setArrayMask(FilterList.lowPassGauss3());
+                        break;
+                    case 11:
+                        filterPass.setArrayMask(FilterList.lowPassGauss4());
+                        break;
+                    case 12:
+                        filterPass.setArrayMask(FilterList.lowPassGauss5());
+                        break;
+
                 }
                 filterPass.run();
 
@@ -990,16 +1026,16 @@ public class Main extends Application {
                 FilterPass filterPass = new FilterPass(bufferedImage);
                 switch (operation) {
                     case 0:
-                        filterPass.setArrayMask(FilterList.highPass1());
+                        filterPass.setArrayMask(FilterList.highPassDeleteAverage());
                         break;
                     case 1:
-                        filterPass.setArrayMask(FilterList.highPass2());
+                        filterPass.setArrayMask(FilterList.highPass1());
                         break;
                     case 2:
-                        filterPass.setArrayMask(FilterList.highPass3());
+                        filterPass.setArrayMask(FilterList.highPass2());
                         break;
                     case 3:
-                        filterPass.setArrayMask(FilterList.highPass4());
+                        filterPass.setArrayMask(FilterList.highPass3());
                         break;
                 }
                 filterPass.run();
@@ -1092,7 +1128,7 @@ public class Main extends Application {
 
     public class MenuLogBinary extends MyMenu {
 
-        MenuItem negation = setNegation("Negation", null),
+        MenuItem negation = setNegation("Logical negation", null),
             logicalSum = setLogicalSum("Logical sum", null),
             logicalProduct = setLogicalProduct("Logical product", null),
             logicalXOR = setLogicalXOR("Logical XOR", null);
@@ -1107,11 +1143,11 @@ public class Main extends Application {
             MenuItem menuNegation = new MenuItem(name, imageView);
 
             menuNegation.setOnAction(event -> {
-                Negation negation = new Negation(bufferedImage);
+                LogicalNegation logicalNegation = new LogicalNegation(bufferedImage);
 
-                bufferedImage = negation.getTemplateImage();
+                bufferedImage = logicalNegation.getTemplateImage();
                 iv1.setImage(SwingFXUtils.toFXImage(bufferedImage, null));
-                addToHistory(bufferedImage, "Binary negation");
+                addToHistory(bufferedImage, "Binary logicalNegation");
             });
 
             return menuNegation;

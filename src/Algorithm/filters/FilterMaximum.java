@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by MSI on 2016-05-11.
+ * @author Krzysztof Macioszek
  */
 public class FilterMaximum extends Algorithm {
 

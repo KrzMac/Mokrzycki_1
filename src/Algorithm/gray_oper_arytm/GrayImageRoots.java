@@ -3,7 +3,7 @@ package Algorithm.gray_oper_arytm;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by MSI on 2016-05-15.
+ * @author Krzysztof Macioszek
  */
 public class GrayImageRoots extends Operations {
 

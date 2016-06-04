@@ -3,11 +3,11 @@ package Algorithm.bin_oper_logicz;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by MSI on 2016-05-15.
+ * @author Krzysztof Macioszek
  */
-public class Negation extends Operations {
+public class LogicalNegation extends Logical {
 
-    public Negation(BufferedImage bufferedImage) {
+    public LogicalNegation(BufferedImage bufferedImage) {
         super(bufferedImage);
 
         run();
@@ -15,7 +15,8 @@ public class Negation extends Operations {
 
     @Override
     public void makeAlgorithm(int x, int y) {
-        if (getBinaryPixel(x, y) == 0)
+        int bit = firstRaster.getSample(x, y, 0);
+        if (bit == 0)
             templateImage.setRGB(x, y, 0xffffffff);
         else
             templateImage.setRGB(x, y, 0xff000000);

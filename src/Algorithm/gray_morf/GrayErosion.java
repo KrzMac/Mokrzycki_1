@@ -3,7 +3,7 @@ package Algorithm.gray_morf;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by MSI on 2016-04-21.
+ * @author Krzysztof Macioszek
  */
 public class GrayErosion extends GrayMorphology {
 

@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
 /**
- * Created by MSI on 2016-05-12.
+ * @author Krzysztof Macioszek
  */
 public class ThresholdHistogram extends Algorithm {
 

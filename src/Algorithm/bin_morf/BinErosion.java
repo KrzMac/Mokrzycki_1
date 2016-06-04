@@ -3,7 +3,7 @@ package Algorithm.bin_morf;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by MSI on 2016-04-20.
+ * @author Krzysztof Macioszek
  */
 public class BinErosion extends BinaryMorphology {
 

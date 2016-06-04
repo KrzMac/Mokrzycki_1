@@ -7,8 +7,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
 /**
- * Created by MSI on 2016-05-15.
+ * Main abstract class for gray image arithmetics operations.
+ *
+ * @author Krzysztof Macioszek
  */
+
 public abstract class Operations extends Algorithm {
 
     BufferedImage firstImage, secondImage, templateImage;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by MSI on 2016-04-20.
+ * @author Krzysztof Macioszek
  */
 public class MaskArray {
 

@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by MSI on 2016-04-20.
+ * @author Krzysztof Macioszek
  */
 abstract public class Image {
 

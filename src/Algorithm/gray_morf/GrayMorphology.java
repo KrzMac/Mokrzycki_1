@@ -5,8 +5,11 @@ import Algorithm.Algorithm;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by MSI on 2016-04-21.
+ * Main abstract class for gray morphology algorithms.
+ *
+ * @author Krzysztof Macioszek
  */
+
 public abstract class GrayMorphology extends Algorithm {
     private BufferedImage templateImage;
     private int size = 2;

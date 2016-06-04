@@ -7,18 +7,23 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
 /**
- * Created by MSI on 2016-05-11.
+ * Main class for gray image histogram operations.
+ *
+ * @author - Krzysztof Macioszek
  */
+
 public class GrayHistogram extends Algorithm {
 
     int[] histogram = new int[256];
     BufferedImage templateImage;
+    Raster grayRaster;
 
     XYChart.Series seriesGray;
 
     public GrayHistogram(BufferedImage bufferedImage) {
         super(bufferedImage);
 
+        this.grayRaster = this.grayImage.getRaster();
         this.templateImage = new BufferedImage(getGrayImage().getWidth(), getGrayImage().getHeight(), getGrayImage().getType());
     }
 
@@ -60,14 +65,14 @@ public class GrayHistogram extends Algorithm {
 
     private void stretching() {
         int g;
-        int minG = 255, maxG = 0;
+        int minG = (int) Math.pow(2, 8) , maxG = 0;
 
         for (int x = 0; x < grayImage.getWidth(); x++) {
             for (int y = 0; y < grayImage.getHeight(); y++) {
                 if (getGrayPixel(x, y) > maxG)
-                    maxG = getGrayPixel(x ,y);
-                if (getGrayPixel(x, y) < minG)
-                    minG = getGrayPixel(x, y);
+                    maxG = getGrayPixel(x, y);
+                if (getGrayPixel(x, y)  < minG)
+                    minG = getGrayPixel(x, y) ;
             }
         }
 
@@ -75,8 +80,18 @@ public class GrayHistogram extends Algorithm {
             for (int y = 0; y < grayImage.getHeight(); y++) {
 //                g = ( 255 / (maxG - minG) ) * (getGrayPixel(x, y) - minG);
 
-                g = ((getGrayPixel(x, y) - 0) / (255 - 0) ) * 255;
-               templateImage.setRGB(x, y, g);
+//                g = ((getGrayPixel(x, y) - 0) / (255 - 0) ) * 255;
+
+                g = ( 255 / (maxG - minG) ) * (getGrayPixel(x, y)  - minG);
+
+//                g = ( (getGrayPixel(x, y) - minG) / (maxG - minG) ) * (int) Math.pow(2, 8);
+
+//               g = (getGrayPixel(x, y) - minG) / ((maxG - minG) * 255);
+
+//                templateImage.setRGB(x, y, g);
+                int[] dArray = {g};
+
+                templateImage.getRaster().setPixel(x, y, dArray);
             }
         }
 
@@ -105,14 +120,15 @@ public class GrayHistogram extends Algorithm {
     }
 
     protected int getGrayPixel(int x, int y) {
-        int rgb = grayImage.getRGB(x, y);
-        int r = (rgb >> 16) & 0xFF;
-        int g = (rgb >> 8) & 0xFF;
-        int b = (rgb & 0xFF);
-
-        int grayLevel = (r + g +b) / 3;
-        int gray = (grayLevel << 16) + (grayLevel << 8) + grayLevel;
-        return gray;
+//        int rgb = grayImage.getRGB(x, y);
+//        int r = (rgb >> 16) & 0xFF;
+//        int g = (rgb >> 8) & 0xFF;
+//        int b = (rgb & 0xFF);
+//
+//        int grayLevel = (r + g +b) / 3;
+//        int gray = (grayLevel << 16) + (grayLevel << 8) + grayLevel;
+//        return gray;
+        return grayRaster.getSample(x, y, 0);
     }
 
     public XYChart.Series getSeriesGray() {

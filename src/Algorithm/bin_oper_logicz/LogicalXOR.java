@@ -3,7 +3,7 @@ package Algorithm.bin_oper_logicz;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by MSI on 2016-05-15.
+ * @author Krzysztof Macioszek
  */
 public class LogicalXOR extends Logical {
 

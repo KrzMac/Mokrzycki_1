@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by MSI on 2016-05-15.
+ * @author Krzysztof Macioszek
  */
 public class ColorImageLog extends Operations {
 
@@ -21,6 +21,10 @@ public class ColorImageLog extends Operations {
         firstRedPixel = (int) Math.log((double) firstRedPixel);
         firstGreenPixel = (int) Math.log((double) firstGreenPixel);
         firstBluePixel = (int) Math.log((double) firstBluePixel);
+
+        firstRedPixel = firstRedPixel > 255 ? 255 : firstRedPixel < 0 ? 0 : firstRedPixel;
+        firstGreenPixel = firstGreenPixel > 255 ? 255 : firstGreenPixel < 0 ? 0 : firstGreenPixel;
+        firstBluePixel = firstBluePixel > 255 ? 255 : firstBluePixel < 0 ? 0 : firstBluePixel;
 
         Color color = new Color(firstRedPixel, firstGreenPixel, firstBluePixel);
 

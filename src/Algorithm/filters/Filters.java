@@ -8,8 +8,11 @@ import java.awt.image.RescaleOp;
 import java.util.*;
 
 /**
- * Created by MSI on 2016-04-23.
+ * Main abstract class for filters image operations.
+ *
+ * @author - Krzysztof Macioszek
  */
+
 public abstract class Filters extends Algorithm {
 
     private BufferedImage templateImage;
@@ -137,5 +140,6 @@ public abstract class Filters extends Algorithm {
 
     public void setArrayMask(Integer[][] arrayMask) {
         this.arrayMask = arrayMask;
+        this.maskSize = arrayMask.length;
     }
 }

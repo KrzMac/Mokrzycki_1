@@ -1,10 +1,9 @@
 package Algorithm.gray_oper_arytm;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by MSI on 2016-05-15.
+ * @author Krzysztof Macioszek
  */
 public class GrayImagesSum extends Operations {
 
